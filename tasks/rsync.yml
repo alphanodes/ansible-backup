@@ -1,0 +1,18 @@
+---
+
+- name: Sync backup with external host
+  become: no
+  synchronize:
+    mode: pull
+    src: '{{ backup_dir }}/'
+    dest: '{{ backup_remote_dir }}'
+    dest_port: '{{ backup_remote_port | default(omit) }}'
+    delete: yes
+    archive: yes
+    rsync_timeout: 10
+    set_remote_user: no
+    verify_host: no
+    rsync_opts:
+          - "--exclude={{ backup_remote_excludes | join(' --exclude=') | default('') }}"
+  delegate_to: "{{ backup_remote_host }}"
+#  delegate_to: "{{ inventory_hostname }}"

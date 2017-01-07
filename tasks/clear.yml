@@ -1,0 +1,44 @@
+---
+
+- name: Find temporary backup files.
+  find:
+    path: "{{ backup_dir }}"
+    file_type: file
+    patterns: "*.tar"
+  register: backup_tmp
+
+- name: Remove temporary backup files.
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ backup_tmp.files | default([]) }}"
+  when: backup_tmp.matched > 0
+
+- name: Find old files.
+  find:
+    path: "{{ backup_dir }}"
+    file_type: file
+    patterns: "*.tar.gz*,*sql.gz*,*.pg_dump*"
+    age: "{{ backup_max_days }}d"
+    age_stamp: mtime
+  register: backup_files
+
+- name: Remove old files.
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ backup_files.files | default([]) }}"
+  when: backup_files.matched > 0
+
+- name: Search for existing backup files.
+  shell: ls -1 {{ backup_dir }}/*-{{ day_stamp }}*
+  register: day_files
+  failed_when: day_files.rc > 2
+  changed_when: false
+  when: backup_one_per_day_limit
+
+- name: Remove existing backups of the current day.
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items: "{{ day_files.stdout_lines | default([]) }}"

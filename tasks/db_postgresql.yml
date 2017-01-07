@@ -1,0 +1,21 @@
+---
+- name: Get postgresql databases
+  shell: "psql --tuples-only -P format=unaligned -c \"SELECT datname FROM pg_database WHERE NOT datistemplate AND datname <> 'postgres'\""
+  register: db_list
+  changed_when: db_list.rc != 0
+  become_user: postgres
+  become: yes
+
+- name: Create postgresql dumps
+  shell: "pg_dump {{ backup_postgresqldump_options }} {{ item }} > {{ backup_dir }}/db-{{ item }}-{{ date_stamp }}.pg_dump"
+  with_items: "{{ db_list.stdout_lines | default([]) }}"
+  when: db_list.stdout_lines | length
+  become_user: postgres
+  become: yes
+
+- name: Create hash file of postgresql backups
+  shell: "sha256sum db-{{ item }}-{{ date_stamp }}.pg_dump > db-{{ item }}-{{ date_stamp }}.pg_dump.sha256"
+  args:
+    chdir: "{{ backup_dir }}"
+  with_items: "{{ db_list.stdout_lines | default([]) }}"
+  when: backup_create_hashfiles and db_list.stdout_lines | length

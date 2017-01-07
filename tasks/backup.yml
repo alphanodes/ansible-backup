@@ -1,0 +1,28 @@
+- set_fact: date_stamp="{{ lookup('pipe','date +%Y%m%d%H%M') }}"
+- set_fact: day_stamp="{{ lookup('pipe','date +%Y%m%d') }}"
+
+- name: Ensures backup_dir exists
+  file:
+    path: '{{ backup_dir }}'
+    state: directory
+    mode: '{{ backup_dir_mode }}'
+    owner: '{{ backup_dir_owner }}'
+    group: '{{ backup_dir_group }}'
+
+- include: clear.yml
+  tags: clear
+
+- include: db_mysql.yml
+  tags: mysql
+  when: backup_with_mysql
+
+- include: db_postgresql.yml
+  tags: postgresql
+  when: backup_with_postgresql
+
+- include: files.yml
+  tags: files
+
+- include: rsync.yml
+  tags: rsync
+  when: backup_remote_host != ''

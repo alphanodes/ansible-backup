@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  remote_user: root
+
+  vars:
+    # Test a global requirement.
+    composer_global_packages:
+      - name: drush/drush
+
+  roles:
+    - geerlingguy.composer
+    - role_under_test

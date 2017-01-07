@@ -1,0 +1,15 @@
+---
+
+- name: Create backup of files/directories
+  command: "tar -cplzf {{ backup_dir }}/{{ item.name }}-{{ date_stamp }}.tar.gz {{ item.src | basename }}"
+  args:
+    chdir: "{{ item.src | dirname }}"
+  with_items: "{{ backup_sets }}"
+  when: backup_sets | length
+
+- name: Create hash file of backup sets
+  shell: "sha256sum {{ item.name }}-{{ date_stamp }}.tar.gz > {{ backup_dir }}/{{ item.name }}-{{ date_stamp }}.tar.gz.sha256"
+  args:
+    chdir: "{{ backup_dir }}"
+  with_items: "{{ backup_sets }}"
+  when: backup_create_hashfiles and backup_sets | length
