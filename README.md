@@ -4,7 +4,7 @@ Run daily backups on Debian and Ubuntu servers.
 
 ## Dependencies
 
-Installed PHP CLI and composer (global)
+Installed PHP CLI and drush (global)
 
 ## Example Playbook
 
