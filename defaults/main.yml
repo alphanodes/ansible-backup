@@ -25,6 +25,7 @@ backup_with_postgresql: no
 backup_mysql_db_excludes:
   - performance_schema
   - information_schema
+  - sys
 
 backup_sets: []
 # - name: etc
@@ -44,3 +45,9 @@ backup_one_per_day_limit: yes
 
 # if sync_master is defined, this means it is a sync_client
 backup_skip_sync_clients: yes
+
+# define commands, which should be run before backup
+backup_pre_commands: []
+
+# define commands, which should be run after backup
+backup_post_commands: []
