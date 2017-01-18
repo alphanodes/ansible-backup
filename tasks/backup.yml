@@ -9,6 +9,10 @@
     owner: '{{ backup_dir_owner }}'
     group: '{{ backup_dir_group }}'
 
+- name: Run backup pre commands
+  command: "{{ item }}"
+  with_items: '{{ backup_pre_commands | default([]) }}'
+
 - include: clear.yml
   tags: clear
 
@@ -26,3 +30,7 @@
 - include: rsync.yml
   tags: rsync
   when: backup_remote_host != ''
+
+- name: Run backup post commands
+  command: "{{ item }}"
+  with_items: '{{ backup_post_commands | default([]) }}'
