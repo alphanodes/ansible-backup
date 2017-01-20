@@ -27,13 +27,14 @@ backup_mysql_db_excludes:
   - information_schema
   - sys
 
+backup_mysql_single_transaction: yes
+
+backup_postgresqldump_options: "--no-owner"
+backup_create_hashfiles: no
+
 backup_sets: []
 # - name: etc
 #   src: /etc
-
-backup_mysqldump_options: "--single-transaction --extended-insert=false"
-backup_postgresqldump_options: "--no-owner"
-backup_create_hashfiles: no
 
 # create only one backup per day
 # (existing backup of same day will be removed)

@@ -1,19 +1,20 @@
 ---
 
-- name: Get mysql databases
+- name: Get MySQL databases
   command: "mysql -Bse 'show databases'"
   register: db_list
   changed_when: db_list.rc != 0
 
-- name: Create mysql dumps
+- name: Create MySQL dumps
   mysql_db:
-    name: "{{ item }}"
+    name: '{{ item }}'
     target: "{{ backup_dir }}/db-{{ item }}-{{ date_stamp }}{{ backup_db_dump_format }}"
     state: dump
+    single_transaction: '{{ backup_mysql_single_transaction }}'
   with_items: "{{ db_list.stdout_lines | default([]) }}"
   when: db_list.stdout_lines | length and item not in backup_mysql_db_excludes
 
-- name: Create hash file of mysql backups
+- name: Create hash file of MySQL backups
   shell: "sha256sum db-{{ item }}-{{ date_stamp }}{{ backup_db_dump_format }} > db-{{ item }}-{{ date_stamp }}{{ backup_db_dump_format }}.sha256"
   args:
     chdir: "{{ backup_dir }}"
