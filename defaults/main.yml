@@ -7,11 +7,13 @@ backup_dir_group: root
 
 backup_max_days: 7
 backup_remote_host: ''
+backup_remote_port: ''
 backup_remote_dir: ''
 backup_remote_excludes:
   - "*.journal"
   - ".nfs*"
   - "*.tar"
+backup_rsync_options: '-avz --delete'
 
 backup_drush_path: /root/.composer/vendor/bin/drush
 
