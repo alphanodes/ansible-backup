@@ -1,6 +1,6 @@
 ---
 
 - name: Sync files to remote host
-  command: rsync {{ backup_rsync_options }} --exclude={{ backup_remote_excludes | join(' --exclude=') | default('') }} {{ backup_dir }}/ {{ "'ssh -p " + backup_remote_port + "'" if backup_remote_port != '' else '' }}{{ backup_remote_host }}:{{ backup_remote_dir }}
+  command: rsync {{ backup_rsync_options }} --exclude={{ backup_remote_excludes | join(' --exclude=') | default('') }} {{ backup_dir }}/ {{ '-e "ssh -p ' + backup_remote_port|string + '" ' if backup_remote_port != '' else '' }}{{ backup_remote_host }}:{{ backup_remote_dir }}
   register: sync_result
   changed_when: sync_result.stdout_lines | length != 4
