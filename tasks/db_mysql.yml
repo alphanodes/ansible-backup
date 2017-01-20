@@ -18,7 +18,7 @@
     and backup_mysqldump_options == ''
 
 - name: Create MySQL dumps (native) with custom options
-  shell: "mysqldump {{ backup_mysqldump_options }} {{ item }} > | gzip > {{ backup_dir }}/db-{{ item }}-{{ date_stamp }}{{ backup_db_dump_format }}"
+  shell: "mysqldump {{ backup_mysqldump_options }} {{ item }} | gzip > {{ backup_dir }}/db-{{ item }}-{{ date_stamp }}{{ backup_db_dump_format }}"
   with_items: "{{ db_list.stdout_lines | default([]) }}"
   when: >
     db_list.stdout_lines | length
