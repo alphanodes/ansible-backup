@@ -34,7 +34,7 @@ backup_mysql_single_transaction: yes
 # Custom mysql options (always sql.gz is used)
 backup_mysqldump_options: ''
 
-backup_postgresqldump_options: "--no-owner"
+backup_postgresqldump_options: "--no-owner -Fc"
 backup_create_hashfiles: no
 
 backup_sets: []
