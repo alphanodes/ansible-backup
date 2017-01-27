@@ -32,6 +32,7 @@ backup_mysql_db_excludes:
 backup_mysql_single_transaction: yes
 
 # Custom mysql options (always sql.gz is used)
+# backup_mysqldump_options: '--extended-insert=true --opt --single-transaction'
 backup_mysqldump_options: ''
 
 backup_postgresqldump_options: "--no-owner -Fc"

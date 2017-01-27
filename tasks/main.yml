@@ -1,7 +1,3 @@
 - include: backup.yml
   tags: backup
   when: not backup_skip_sync_clients or sync_master is undefined
-
-- include: client_sync.yml
-  tags: backup,sync
-  when: sync_master is defined
