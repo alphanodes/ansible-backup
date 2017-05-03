@@ -15,6 +15,13 @@ backup_remote_excludes:
   - '*.tar'
 backup_rsync_options: '-avz --delete'
 
+# rsync or lftp
+backup_remote_transfer: rsync
+
+# only used with lftp
+backup_remote_user: ''
+backup_remote_password: ''
+
 backup_drush_path: /root/.composer/vendor/bin/drush
 
 # Uncompressed SQL files (.sql) as well as bzip2 (.bz2), gzip (.gz) and xz

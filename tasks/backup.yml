@@ -28,8 +28,12 @@
   tags: files
 
 - include: rsync.yml
-  tags: rsync
-  when: backup_remote_host != ''
+  tags: sync
+  when: backup_remote_host != '' and backup_remote_transfer == 'rsync'
+
+- include: lftp.yml
+  tags: sync
+  when: backup_remote_host != '' and backup_remote_transfer == 'lftp'
 
 - name: Run backup post commands
   command: "{{ item }}"
