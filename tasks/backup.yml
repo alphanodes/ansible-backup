@@ -1,5 +1,7 @@
 - set_fact: date_stamp="{{ lookup('pipe','date +%Y%m%d%H%M') }}"
+  tags: vars
 - set_fact: day_stamp="{{ lookup('pipe','date +%Y%m%d') }}"
+  tags: vars
 
 - name: Ensures backup_dir exists
   file:
@@ -26,6 +28,9 @@
 
 - include: files.yml
   tags: files
+  with_items: "{{ backup_sets | default([]) }}"
+  loop_control:
+    loop_var: instance
 
 - include: rsync.yml
   tags: sync
