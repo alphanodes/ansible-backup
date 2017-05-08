@@ -1,9 +1,12 @@
 - set_fact: excludes="{{ instance.excludes | default([]) }}"
+- set_fact: unsafe_writes="{{ instance.unsafe_writes | default(backup_files_unsafe_writes) }}"
+- set_fact: warning_options="{{ '--warning=no-file-removed --warning=no-file-changed --warning=no-file-ignored' if unsafe_writes else '' }}"
 
 - name: Create backup of files/directories - {{ instance.name }}
-  command: "tar --exclude={{ excludes | join(' --exclude=') }} -cplzf {{ backup_dir }}/{{ instance.name }}-{{ date_stamp }}.tar.gz {{ instance.src | basename }}"
+  command: "tar {{ warning_options }} --exclude={{ excludes | join(' --exclude=') }} -cplzf {{ backup_dir }}/{{ instance.name }}-{{ date_stamp }}.tar.gz {{ instance.src | basename }}"
   args:
     chdir: "{{ instance.src | dirname }}"
+    warn: no
 
 - name: Create hash file of backup sets - {{ instance.name }}
   shell: "sha256sum {{ instance.name }}-{{ date_stamp }}.tar.gz > {{ backup_dir }}/{{ instance.name }}-{{ date_stamp }}.tar.gz.sha256"

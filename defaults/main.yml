@@ -44,6 +44,7 @@ backup_mysqldump_options: ''
 
 backup_postgresqldump_options: "--no-owner -Fc"
 backup_create_hashfiles: no
+backup_files_unsafe_writes: no
 
 backup_sets: []
 # - name: etc
