@@ -8,8 +8,8 @@
     path: '{{ backup_dir }}'
     state: directory
     mode: '{{ backup_dir_mode }}'
-    owner: '{{ backup_dir_owner }}'
-    group: '{{ backup_dir_group }}'
+    owner: '{{ backup_dir_owner | default(omit) }}'
+    group: '{{ backup_dir_group | default(omit) }}'
 
 - name: Run backup pre commands
   command: "{{ item }}"
