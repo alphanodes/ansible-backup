@@ -13,4 +13,6 @@ galaxy_info:
       versions:
       - jessie
   galaxy_tags:
-    - backup, mysql, postgresql
+    - backup
+    - postgresql
+    - mysql
