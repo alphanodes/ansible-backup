@@ -6,7 +6,7 @@
 - name: Create backup of files/directories - {{ instance.name }}
   command: "tar {{ warning_options }} --exclude={{ excludes | join(' --exclude=') }} -cplzf {{ backup_dir }}/{{ instance.name }}-{{ date_stamp }}.tar.gz {{ instance.src | basename }}"
   register: tar_cmd
-  failed_when: tar_cmd.rc >= tar_rc
+  failed_when: tar_cmd.rc >= tar_rc|int
   args:
     chdir: "{{ instance.src | dirname }}"
     warn: no
