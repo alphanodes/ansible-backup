@@ -11,7 +11,7 @@
     target: "{{ backup_dir }}/db-{{ item }}-{{ date_stamp }}{{ backup_db_dump_format }}"
     state: dump
     single_transaction: '{{ backup_mysql_single_transaction }}'
-  with_items: "{{ db_list.stdout_lines | default([]) }}"
+  loop: "{{ db_list.stdout_lines | default([]) }}"
   when: >
     db_list.stdout_lines | length
     and item not in backup_mysql_db_excludes
@@ -19,7 +19,7 @@
 
 - name: Create MySQL dumps (native) with custom options
   shell: "mysqldump {{ backup_mysqldump_options }} {{ item }} | gzip > {{ backup_dir }}/db-{{ item }}-{{ date_stamp }}{{ backup_db_dump_format }}"
-  with_items: "{{ db_list.stdout_lines | default([]) }}"
+  loop: "{{ db_list.stdout_lines | default([]) }}"
   when: >
     db_list.stdout_lines | length
     and item not in backup_mysql_db_excludes
@@ -29,5 +29,5 @@
   shell: "sha256sum db-{{ item }}-{{ date_stamp }}{{ backup_db_dump_format }} > db-{{ item }}-{{ date_stamp }}{{ backup_db_dump_format }}.sha256"
   args:
     chdir: "{{ backup_dir }}"
-  with_items: "{{ db_list.stdout_lines | default([]) }}"
+  loop: "{{ db_list.stdout_lines | default([]) }}"
   when: backup_create_hashfiles and db_list.stdout_lines | length and item not in backup_mysql_db_excludes

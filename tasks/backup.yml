@@ -13,7 +13,7 @@
 
 - name: Run backup pre commands
   command: "{{ item }}"
-  with_items: '{{ backup_pre_commands | default([]) }}'
+  loop: '{{ backup_pre_commands | default([]) }}'
 
 - include_tasks: clear.yml
   tags: clear
@@ -28,7 +28,7 @@
 
 - include_tasks: files.yml
   tags: files
-  with_items: "{{ backup_sets | default([]) }}"
+  loop: "{{ backup_sets | default([]) }}"
   loop_control:
     loop_var: instance
 
@@ -42,4 +42,4 @@
 
 - name: Run backup post commands
   command: "{{ item }}"
-  with_items: '{{ backup_post_commands | default([]) }}'
+  loop: '{{ backup_post_commands | default([]) }}'

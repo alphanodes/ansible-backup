@@ -4,11 +4,12 @@ galaxy_info:
   description: Daily backup for Debian and Ubuntu.
   company: AlphaNodes GmbH
   license: GPL Version 3
-  min_ansible_version: 2.4
+  min_ansible_version: 2.5
   platforms:
     - name: Ubuntu
       versions:
       - xenial
+      - bionic
     - name: Debian
       versions:
       - jessie
