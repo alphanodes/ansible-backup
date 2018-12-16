@@ -1,3 +1,4 @@
-- include_tasks: backup.yml
+- name: Include backup tasks
+  include_tasks: backup.yml
   tags: backup
   when: not backup_skip_sync_clients or sync_master is undefined

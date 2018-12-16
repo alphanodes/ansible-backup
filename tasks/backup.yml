@@ -15,28 +15,34 @@
   command: "{{ item }}"
   loop: '{{ backup_pre_commands | default([]) }}'
 
-- include_tasks: clear.yml
+- name: Include clear tasks
+  include_tasks: clear.yml
   tags: clear
 
-- include_tasks: db_mysql.yml
+- name: Include MySQL tasks
+  include_tasks: db_mysql.yml
   tags: mysql
   when: backup_with_mysql
 
-- include_tasks: db_postgresql.yml
+- name: Include PostgreSQL tasks
+  include_tasks: db_postgresql.yml
   tags: postgresql
   when: backup_with_postgresql
 
-- include_tasks: files.yml
+- name: Include files tasks
+  include_tasks: files.yml
   tags: files
   loop: "{{ backup_sets | default([]) }}"
   loop_control:
     loop_var: instance
 
-- include_tasks: rsync.yml
+- name: Include rsync tasks
+  include_tasks: rsync.yml
   tags: sync
   when: backup_remote_host != '' and backup_remote_transfer == 'rsync'
 
-- include_tasks: lftp.yml
+- name: Include lftp tasks
+  include_tasks: lftp.yml
   tags: sync
   when: backup_remote_host != '' and backup_remote_transfer == 'lftp'
 
