@@ -22,8 +22,6 @@ backup_remote_transfer: rsync
 backup_remote_user: ''
 backup_remote_password: ''
 
-backup_drush_path: /root/.composer/vendor/bin/drush
-
 # Uncompressed SQL files (.sql) as well as bzip2 (.bz2), gzip (.gz) and xz
 # (at the moment only used for mysql dumps)
 backup_db_dump_format: .sql.gz
