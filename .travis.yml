@@ -21,7 +21,8 @@ script:
   - ${PWD}/tests/test.sh
 
   # Check if backup files are  available.
-  - 'docker exec --tty ${container_id} env TERM=xterm ls /srv/backups/*.tar.gz.sha256'
+  #- 'docker exec --tty ${container_id} env TERM=xterm ls /srv/backups/*.tar.gz.sha256'
+  - 'docker exec --tty ${container_id} env TERM=xterm ls /srv/backups/'
 
 after_failure:
   - 'docker exec --tty ${container_id} env TERM=xterm ls /srv/backups'
