@@ -25,7 +25,7 @@ script:
   - ${PWD}/tests/test.sh
 
   # Check if svn is available.
-  - 'docker exec --tty ${container_id} env TERM=xterm bash -c [ "$((`ls /srv/backups|wc -l`))" == "4" ]'
+  - 'docker exec --tty ${container_id} env TERM=xterm ls /srv/backups/*.tar.gz.sha256'
 
 after_failure:
   - 'docker exec --tty ${container_id} env TERM=xterm ls /srv/backups'
