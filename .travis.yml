@@ -1,6 +1,6 @@
 ---
 services: docker
-language: ruby
+language: bash
 
 branches:
   only:
