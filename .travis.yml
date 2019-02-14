@@ -12,6 +12,7 @@ script:
   # Configure test script so we can run extra tests after playbook is run.
   - export container_id=$(date +%s)
   - export cleanup=false
+  - export test_idempotence=false
 
   # Download test shim.
   - wget -O ${PWD}/tests/test.sh https://gist.githubusercontent.com/geerlingguy/73ef1e5ee45d8694570f334be385e181/raw/
@@ -21,8 +22,7 @@ script:
   - ${PWD}/tests/test.sh
 
   # Check if backup files are  available.
-  #- 'docker exec --tty ${container_id} env TERM=xterm ls /srv/backups/*.tar.gz.sha256'
-  - 'docker exec --tty ${container_id} env TERM=xterm ls /srv/backups/'
+  - 'docker exec --tty ${container_id} env TERM=xterm [ "$((`ls /srv/backups|wc -l`))" == "4" ]'
 
 after_failure:
   - 'docker exec --tty ${container_id} env TERM=xterm ls /srv/backups'

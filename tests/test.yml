@@ -1,5 +1,5 @@
 ---
-- hosts: localhost
+- hosts: all
   vars:
     backup_create_hashfiles: yes
     backup_sets:
