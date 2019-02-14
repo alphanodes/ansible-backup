@@ -1,10 +1,6 @@
 ---
 services: docker
-language: minimal
-
-branches:
-  only:
-    - master
+language: ruby
 
 env:
   - distro: debian8
@@ -24,7 +20,7 @@ script:
   # Run tests.
   - ${PWD}/tests/test.sh
 
-  # Check if svn is available.
+  # Check if backup files are  available.
   - 'docker exec --tty ${container_id} env TERM=xterm ls /srv/backups/*.tar.gz.sha256'
 
 after_failure:
