@@ -1,6 +1,9 @@
-- set_fact: date_stamp="{{ lookup('pipe','date +%Y%m%d%H%M') }}"
+- name: Set date stamp
+  set_fact: date_stamp="{{ lookup('pipe','date +%Y%m%d%H%M') }}"
   tags: vars
-- set_fact: day_stamp="{{ lookup('pipe','date +%Y%m%d') }}"
+
+- name: Set day stamp
+  set_fact: day_stamp="{{ lookup('pipe','date +%Y%m%d') }}"
   tags: vars
 
 - name: Ensures backup_dir exists

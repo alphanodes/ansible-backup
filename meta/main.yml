@@ -1,7 +1,10 @@
 ---
+dependencies: []
+
 galaxy_info:
-  author: alexandermeindl
+  role_name: backup
   description: Daily backup for Debian and Ubuntu.
+  author: alexandermeindl
   company: AlphaNodes GmbH
   license: GPL Version 3
   min_ansible_version: 2.5
@@ -18,3 +21,4 @@ galaxy_info:
     - backup
     - postgresql
     - mysql
+    - files

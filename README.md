@@ -2,6 +2,8 @@
 
 Run daily backups on Debian and Ubuntu servers.
 
+[![Build Status](https://travis-ci.org/AlphaNodes/ansible-backup.svg?branch=master)](https://travis-ci.org/AlphaNodes/ansible-backup)
+
 ## Dependencies
 
 Installed PHP CLI and drush (global)

@@ -1,7 +1,14 @@
-- set_fact: excludes="{{ instance.excludes | default([]) }}"
-- set_fact: unsafe_writes="{{ instance.unsafe_writes | default(backup_files_unsafe_writes) }}"
-- set_fact: warning_options="{{ '--warning=no-file-removed --warning=no-file-changed --warning=no-file-ignored' if unsafe_writes else '' }}"
-- set_fact: tar_rc="{{ 1 if warning_options == '' else 2 }}"
+- name: Set excludes
+  set_fact: excludes="{{ instance.excludes | default([]) }}"
+
+- name: Set unsafe writes
+  set_fact: unsafe_writes="{{ instance.unsafe_writes | default(backup_files_unsafe_writes) }}"
+
+- name: Set warning options
+  set_fact: warning_options="{{ '--warning=no-file-removed --warning=no-file-changed --warning=no-file-ignored' if unsafe_writes else '' }}"
+
+- name: Set tar return code
+  set_fact: tar_rc="{{ 1 if warning_options == '' else 2 }}"
 
 - name: Create backup of files/directories - {{ instance.name }}
   command: "tar {{ warning_options }} --exclude={{ excludes | join(' --exclude=') }} -cplzf {{ backup_dir }}/{{ instance.name }}-{{ date_stamp }}.tar.gz {{ instance.src | basename }}"

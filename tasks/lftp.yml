@@ -1,4 +1,3 @@
----
 - fail:
     msg: 'backup_remote_user, backup_remote_password and backup_remote_host has to be specified for lftp'
   when: >
