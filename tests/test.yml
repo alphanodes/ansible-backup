@@ -1,12 +1,11 @@
 ---
 - hosts: localhost
-  remote_user: root
-
   vars:
-    # Test a global requirement.
-    composer_global_packages:
-      - name: drush/drush
-
+    backup_create_hashfiles: yes
+    backup_sets:
+      - name: etc
+        src: /etc
+      - name: root
+        src: /root
   roles:
-    - geerlingguy.composer
     - role_under_test
