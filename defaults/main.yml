@@ -21,6 +21,7 @@ backup_remote_excludes:
   - '*.journal'
   - '.nfs*'
   - '*.tar'
+
 backup_rsync_options: '-avz --delete'
 
 # rsync or lftp
