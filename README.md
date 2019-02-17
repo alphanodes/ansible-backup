@@ -188,21 +188,13 @@ backup_files_unsafe_writes: no
 ```
 
 If `backup_files_unsafe_writes` is yes and changed files are found while creating tar files, no error are reported. tar runs with the additional options `--warning=no-file-removed --warning=no-file-changed --warning=no-file-ignored`.
-
+This option can be overwritten for each set with `unsafe_writes`.
 
 ```
 backup_sets: []
-  - name: etc
-    src: /etc
-  - name: jenkins
-    src: /var/lib/jenkins
-    unsafe_writes: yes
-    excludes:
-      - builds
-      - workspace
 ```
 
-Backup sets for file backup. `name` is used as backup file name. `src` is the directory of file, which should be back uped.
+Backup sets for file backup. `name` is used as backup file name. `src` is the directory of file, which should be back uped. `unsafe_writes` overwrites `backup_files_unsafe_writes`. `excludes` is a list, which can be used to exclude files or directories.
 
 
 ```
@@ -250,6 +242,30 @@ List of commands, which runs after backup dump has been created.
     backup_sets:
       - name: etc
         src: /etc
+  roles:
+    - AlphaNodes.backup
+```
+
+## Extendet example Playbook
+
+```yaml
+- hosts: server-name
+  vars:
+    backup_max_days: 14
+    backup_max_weeks: 4
+    backup_max_months: 6
+    backup_with_postgresql: yes
+    backup_dir_mode: 0770
+    backup_dir_group: postgres
+    backup_sets:
+      - name: etc
+        src: /etc
+      - name: jenkins
+        src: /var/lib/jenkins
+        unsafe_writes: yes
+        excludes:
+          - builds
+          - workspace
   roles:
     - AlphaNodes.backup
 ```
