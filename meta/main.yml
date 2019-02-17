@@ -22,3 +22,5 @@ galaxy_info:
     - postgresql
     - mysql
     - files
+    - rotation
+    - daily
