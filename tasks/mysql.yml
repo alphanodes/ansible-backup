@@ -1,0 +1,11 @@
+- name: Get MySQL databases
+  command: "mysql -Bse 'show databases'"
+  register: db_list
+  changed_when: db_list.rc != 0
+
+- name: Include MySQL db tasks
+  include_tasks: mysql_db.yml
+  loop: "{{ db_list.stdout_lines | default([]) }}"
+  loop_control:
+    loop_var: db
+  when: db_list.stdout_lines | length and db not in backup_mysql_db_excludes

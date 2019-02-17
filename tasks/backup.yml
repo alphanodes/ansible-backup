@@ -6,6 +6,14 @@
   set_fact: day_stamp="{{ lookup('pipe','date +%Y%m%d') }}"
   tags: vars
 
+- name: Check valid backup_max_days, backup_max_weeks and backup_max_months
+  fail:
+    msg: 'backup_max_days, backup_max_weeks and backup_max_months needs at least value 1 or higher'
+  when: backup_max_days < 1 or backup_max_weeks < 1 or backup_max_months < 1
+
+- name: Calc daily, weekly or monthly period
+  set_fact: backup_file_period="{{ 'monthly' if ansible_date_time.day == '1' else 'weekly' if ansible_date_time.weekday_number == '1' else 'daily' }}"
+
 - name: Ensures backup_dir exists
   file:
     path: '{{ backup_dir }}'
@@ -23,12 +31,12 @@
   tags: clear
 
 - name: Include MySQL tasks
-  include_tasks: db_mysql.yml
+  include_tasks: mysql.yml
   tags: mysql
   when: backup_with_mysql
 
 - name: Include PostgreSQL tasks
-  include_tasks: db_postgresql.yml
+  include_tasks: postgresql.yml
   tags: postgresql
   when: backup_with_postgresql
 

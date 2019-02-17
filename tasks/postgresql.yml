@@ -1,0 +1,13 @@
+- name: Get postgresql databases
+  command: "psql --tuples-only -P format=unaligned -c \"SELECT datname FROM pg_database WHERE NOT datistemplate AND datname <> 'postgres'\""
+  register: db_list
+  changed_when: db_list.rc != 0
+  become_user: postgres
+  become: yes
+
+- name: Include PostgreSQL db tasks
+  include_tasks: postgresql_db.yml
+  loop: "{{ db_list.stdout_lines | default([]) }}"
+  loop_control:
+    loop_var: db
+  when: db_list.stdout_lines | length

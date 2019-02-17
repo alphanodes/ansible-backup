@@ -1,41 +1,73 @@
-- name: Find temporary backup files.
+- name: Find temporary backup files
   find:
     path: "{{ backup_dir }}"
     file_type: file
     patterns: "*.tar"
   register: backup_tmp
 
-- name: Remove temporary backup files.
+- name: Remove temporary backup files
   file:
     path: "{{ item.path }}"
     state: absent
   loop: "{{ backup_tmp.files | default([]) }}"
   when: backup_tmp.matched > 0
 
-- name: Find old files.
+- name: Find old daily files
   find:
     path: "{{ backup_dir }}"
     file_type: file
-    patterns: "*.tar.gz*,*sql.gz*,*.pg_dump*"
+    patterns: "*-daily.*"
     age: "{{ backup_max_days }}d"
     age_stamp: mtime
   register: backup_files
 
-- name: Remove old files.
+- name: Remove old daily files
   file:
     path: "{{ item.path }}"
     state: absent
   loop: "{{ backup_files.files | default([]) }}"
   when: backup_files.matched > 0
 
-- name: Search for existing backup files.
+- name: Find old weekly files
+  find:
+    path: "{{ backup_dir }}"
+    file_type: file
+    patterns: "*-weekly.*"
+    age: "{{ backup_max_weeks }}w"
+    age_stamp: mtime
+  register: backup_files
+
+- name: Remove old weekly files
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ backup_files.files | default([]) }}"
+  when: backup_files.matched > 0
+
+- name: Find old monthly files
+  find:
+    path: "{{ backup_dir }}"
+    file_type: file
+    patterns: "*-monthly.*"
+    age: "{{ backup_max_months * 31 }}d"
+    age_stamp: mtime
+  register: backup_files
+
+- name: Remove old monthly files
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ backup_files.files | default([]) }}"
+  when: backup_files.matched > 0
+
+- name: Search for existing backup files
   shell: ls -1 {{ backup_dir }}/*-{{ day_stamp }}*
   register: day_files
   failed_when: day_files.rc > 2
   changed_when: false
   when: backup_one_per_day_limit
 
-- name: Remove existing backups of the current day.
+- name: Remove existing backups of the current day
   file:
     path: "{{ item }}"
     state: absent

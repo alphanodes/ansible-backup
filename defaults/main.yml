@@ -5,7 +5,15 @@ backup_dir_mode: 0755
 backup_dir_owner: root
 backup_dir_group: root
 
+# Amount of days for daily backup sets
 backup_max_days: 7
+
+# Amount of weeks for weekly backup sets
+backup_max_weeks: 1
+
+# Amount of months for monthly backup sets
+backup_max_months: 1
+
 backup_remote_host: ''
 backup_remote_port: ''
 backup_remote_dir: ''

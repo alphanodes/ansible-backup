@@ -3,7 +3,7 @@ dependencies: []
 
 galaxy_info:
   role_name: backup
-  description: Daily backup for Debian and Ubuntu.
+  description: Run daily backups for files, MySQL databases and PostgreSQL databases
   author: alexandermeindl
   company: AlphaNodes GmbH
   license: GPL Version 3

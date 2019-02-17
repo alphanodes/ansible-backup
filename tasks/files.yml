@@ -10,8 +10,11 @@
 - name: Set tar return code
   set_fact: tar_rc="{{ 1 if warning_options == '' else 2 }}"
 
+- name: Set backup file name
+  set_fact: backup_file_name="{{ instance.name }}-{{ date_stamp }}-{{ backup_file_period }}.tar.gz"
+
 - name: Create backup of files/directories - {{ instance.name }}
-  command: "tar {{ warning_options }} --exclude={{ excludes | join(' --exclude=') }} -cplzf {{ backup_dir }}/{{ instance.name }}-{{ date_stamp }}.tar.gz {{ instance.src | basename }}"
+  command: "tar {{ warning_options }} --exclude={{ excludes | join(' --exclude=') }} -cplzf {{ backup_dir }}/{{ backup_file_name }} {{ instance.src | basename }}"
   register: tar_cmd
   failed_when: tar_cmd.rc >= tar_rc|int
   args:
@@ -19,7 +22,7 @@
     warn: no
 
 - name: Create hash file of backup sets - {{ instance.name }}
-  shell: "sha256sum {{ instance.name }}-{{ date_stamp }}.tar.gz > {{ backup_dir }}/{{ instance.name }}-{{ date_stamp }}.tar.gz.sha256"
+  shell: "sha256sum {{ backup_file_name }} > {{ backup_dir }}/{{ backup_file_name }}.sha256"
   args:
     chdir: "{{ backup_dir }}"
   when: backup_create_hashfiles

@@ -1,0 +1,20 @@
+- name: Set backup file name - {{ db }}
+  set_fact: backup_file_name="db-{{ db }}-{{ date_stamp }}-{{ backup_file_period }}{{ backup_db_dump_format }}"
+
+- name: Create MySQL dump (ansible) - {{ db }}
+  mysql_db:
+    name: '{{ db }}'
+    target: "{{ backup_dir }}/{{ backup_file_name }}"
+    state: dump
+    single_transaction: '{{ backup_mysql_single_transaction }}'
+  when: backup_mysqldump_options == ''
+
+- name: Create MySQL dump (native) with custom options - {{ db }}
+  shell: "mysqldump {{ backup_mysqldump_options }} {{ db }} | gzip > {{ backup_dir }}/{{ backup_file_name }}"
+  when: backup_mysqldump_options != ''
+
+- name: Create hash file for dump - {{ db }}
+  shell: "sha256sum {{ backup_file_name }} > {{ backup_file_name }}.sha256"
+  args:
+    chdir: "{{ backup_dir }}"
+  when: backup_create_hashfiles
