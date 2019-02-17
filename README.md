@@ -2,6 +2,8 @@
 
 Run daily, weekly and monthly backups for files, MySQL databases and PostgreSQL databases on Debian and Ubuntu servers.
 
+Backup rotation is configurable, e.g. you can use [Grandfather-father-son](https://en.wikipedia.org/wiki/Backup_rotation_scheme#Grandfather-father-son)
+
 [![Ansible Galaxy](https://img.shields.io/badge/galaxy-alphanodes.backup-660198.svg)](https://galaxy.ansible.com/AlphaNodes/backup)
 [![Build Status](https://travis-ci.org/AlphaNodes/ansible-backup.svg?branch=master)](https://travis-ci.org/AlphaNodes/ansible-backup)
 
