@@ -1,13 +1,13 @@
 # Ansible Role: Backup
 
-Run daily backups on Debian and Ubuntu servers.
+Run daily backups for files, MySQL databases and PostgreSQL databases on Debian and Ubuntu servers.
 
 [![Ansible Galaxy](https://img.shields.io/badge/galaxy-alphanodes.backup-660198.svg)](https://galaxy.ansible.com/AlphaNodes/backup)
 [![Build Status](https://travis-ci.org/AlphaNodes/ansible-backup.svg?branch=master)](https://travis-ci.org/AlphaNodes/ansible-backup)
 
 ## Dependencies
 
-Installed PHP CLI and drush (global)
+  none
 
 ## Installation
 
@@ -18,6 +18,11 @@ Using ansible galaxy cli:
 ```bash
 ansible-galaxy install alphanodes.backup
 ```
+
+## Role Variables
+
+Available variables are listed below, along with default values (see `defaults/main.yml`):
+
 
 ## Example Playbook
 
