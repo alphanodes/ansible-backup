@@ -12,7 +12,7 @@
   when: backup_max_days < 1 or backup_max_weeks < 1 or backup_max_months < 1
 
 - name: Calc daily, weekly or monthly period
-  set_fact: backup_file_period="{{ 'monthly' if ansible_date_time.day == '1' else 'weekly' if ansible_date_time.weekday_number == '1' else 'daily' }}"
+  set_fact: backup_file_period="{{ 'monthly' if ansible_date_time.day == '01' else 'weekly' if ansible_date_time.weekday_number == '1' else 'daily' }}"
 
 - name: Ensures backup_dir exists
   file:
