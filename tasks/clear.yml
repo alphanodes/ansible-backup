@@ -3,12 +3,16 @@
     path: "{{ backup_dir }}"
     file_type: file
     patterns: "*.tar"
+  become: "{{ backup_files_become | default('false') }}"
+  become_user: '{{ backup_files_become_user | default(omit) }}'
   register: backup_tmp
 
 - name: Remove temporary backup files
   file:
     path: "{{ item.path }}"
     state: absent
+  become: "{{ backup_files_become | default('false') }}"
+  become_user: '{{ backup_files_become_user | default(omit) }}'
   loop: "{{ backup_tmp.files | default([]) }}"
   when: backup_tmp.matched > 0
 
@@ -19,6 +23,8 @@
     patterns: "*-daily.*"
     age: "{{ backup_max_days }}d"
     age_stamp: mtime
+  become: "{{ backup_files_become | default('false') }}"
+  become_user: '{{ backup_files_become_user | default(omit) }}'
   register: backup_files
 
 - name: Remove old daily files
@@ -26,6 +32,8 @@
     path: "{{ item.path }}"
     state: absent
   loop: "{{ backup_files.files | default([]) }}"
+  become: "{{ backup_files_become | default('false') }}"
+  become_user: '{{ backup_files_become_user | default(omit) }}'
   when: backup_files.matched > 0
 
 - name: Find old weekly files
@@ -35,6 +43,8 @@
     patterns: "*-weekly.*"
     age: "{{ backup_max_weeks }}w"
     age_stamp: mtime
+  become: "{{ backup_files_become | default('false') }}"
+  become_user: '{{ backup_files_become_user | default(omit) }}'
   register: backup_files
 
 - name: Remove old weekly files
@@ -42,6 +52,8 @@
     path: "{{ item.path }}"
     state: absent
   loop: "{{ backup_files.files | default([]) }}"
+  become: "{{ backup_files_become | default('false') }}"
+  become_user: '{{ backup_files_become_user | default(omit) }}'
   when: backup_files.matched > 0
 
 - name: Find old monthly files
@@ -52,12 +64,16 @@
     age: "{{ backup_max_months * 31 }}d"
     age_stamp: mtime
   register: backup_files
+  become: "{{ backup_files_become | default('false') }}"
+  become_user: '{{ backup_files_become_user | default(omit) }}'
 
 - name: Remove old monthly files
   file:
     path: "{{ item.path }}"
     state: absent
   loop: "{{ backup_files.files | default([]) }}"
+  become: "{{ backup_files_become | default('false') }}"
+  become_user: '{{ backup_files_become_user | default(omit) }}'
   when: backup_files.matched > 0
 
 - name: Search for existing backup files
@@ -65,6 +81,8 @@
   register: day_files
   failed_when: day_files.rc > 2
   changed_when: false
+  become: "{{ backup_files_become | default('false') }}"
+  become_user: '{{ backup_files_become_user | default(omit) }}'
   when: backup_one_per_day_limit
 
 - name: Remove existing backups of the current day
@@ -72,3 +90,5 @@
     path: "{{ item }}"
     state: absent
   loop: "{{ day_files.stdout_lines | default([]) }}"
+  become: "{{ backup_files_become | default('false') }}"
+  become_user: '{{ backup_files_become_user | default(omit) }}'
