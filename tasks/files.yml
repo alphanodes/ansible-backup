@@ -1,8 +1,7 @@
-- name: Set excludes
-  set_fact: excludes="{{ instance.excludes | default([]) }}"
-
-- name: Set unsafe writes
-  set_fact: unsafe_writes="{{ instance.unsafe_writes | default(backup_files_unsafe_writes) }}"
+- name: Set facts
+  set_fact:
+    excludes: "{{ instance.excludes | default([]) }}"
+    unsafe_writes: "{{ instance.unsafe_writes | default(backup_files_unsafe_writes) }}"
 
 - name: Set warning options
   set_fact: warning_options="{{ '--warning=no-file-removed --warning=no-file-changed --warning=no-file-ignored' if unsafe_writes else '' }}"
