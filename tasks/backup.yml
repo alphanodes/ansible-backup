@@ -19,6 +19,8 @@
     mode: '{{ backup_dir_mode }}'
     owner: '{{ backup_dir_owner }}'
     group: '{{ backup_dir_group }}'
+  become: "{{ backup_files_become | default(omit) }}"
+  become_user: '{{ backup_files_become_user | default(omit) }}'
 
 - name: Run backup pre commands
   command: "{{ item }}"
