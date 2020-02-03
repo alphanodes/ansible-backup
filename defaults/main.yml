@@ -24,7 +24,7 @@ backup_remote_excludes:
 
 backup_rsync_options: '-avz --delete'
 
-# rsync or lftp
+# rsync, lftp or borg
 backup_remote_transfer: rsync
 
 # only used with lftp
@@ -73,3 +73,20 @@ backup_pre_commands: []
 
 # define commands, which should be run after backup
 backup_post_commands: []
+
+backup_borg_sets: []
+# ssh://{{ storageboxes.no1.user }}@{{ storageboxes.no1.host }}:23/./backups/server1
+# /srv/borg_backup
+backup_borg_repo: ''
+backup_borg_passphrase: ''
+backup_borg_log: /var/log/borg.log
+backup_borg_prune_keep_daily: 7
+backup_borg_prune_keep_weekly: 4
+backup_borg_prune_keep_monthly: 2
+backup_borg_prune_keep_yearly: 1
+
+# see https://borgbackup.readthedocs.io/en/stable/usage/create.html#
+backup_borg_compression: auto,zlib,6
+backup_borg_encryption_mode: repokey
+backup_borg_with_prune: yes
+backup_borg_with_check: yes

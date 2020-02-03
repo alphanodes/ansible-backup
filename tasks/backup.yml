@@ -2,6 +2,7 @@
   set_fact:
     date_stamp: "{{ lookup('pipe','date +%Y%m%d%H%M') }}"
     day_stamp: "{{ lookup('pipe','date +%Y%m%d') }}"
+    date_readable_stamp: "{{ lookup('pipe','date +%Y-%m-%d_%H:%M') }}"
   tags: vars
 
 - name: Check valid backup_max_days, backup_max_weeks and backup_max_months
@@ -56,6 +57,11 @@
   include_tasks: lftp.yml
   tags: sync
   when: backup_remote_host != '' and backup_remote_transfer == 'lftp'
+
+- name: Include borg tasks
+  include_tasks: borg.yml
+  tags: sync
+  when: backup_remote_transfer == 'borg'
 
 - name: Run backup post commands
   command: "{{ item }}"
