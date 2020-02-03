@@ -58,11 +58,11 @@
 
     - name: Get latest repository information
       command: borg info -v {{ backup_borg_repo }}
-      register: borg_info
+      register: info
       environment:
         BORG_PASSPHRASE: '{{ backup_borg_passphrase }}'
 
     - name: Show borg Info
-      debug: var=borg_info.stdout_lines
+      debug: var=info.stdout_lines
 
   when: borg_info.rc == 0
