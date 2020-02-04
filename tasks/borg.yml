@@ -31,11 +31,15 @@
     borg create -v --compression {{ backup_borg_compression }} --stats
     {{ backup_borg_repo }}::{hostname}-{now:%Y-%m-%d_%H:%M}
     {% for borg_set in backup_borg_sets %}{{ borg_set.src }} {% endfor %}
+  register: borg_create
   environment:
     BORG_PASSPHRASE: '{{ backup_borg_passphrase }}'
 
 - name: Run Repo tasks
   block:
+    - name: Show borg create info
+      debug: var=borg_create.stdout_lines
+
     - name: Run prune
       command: >
         borg prune -v --list
@@ -48,7 +52,7 @@
         BORG_PASSPHRASE: '{{ backup_borg_passphrase }}'
       when: backup_borg_with_prune
 
-    - name: Run Check
+    - name: Run Check (if activated)
       command: >
         borg check -v
         {{ backup_borg_repo }}
@@ -56,13 +60,17 @@
         BORG_PASSPHRASE: '{{ backup_borg_passphrase }}'
       when: backup_borg_with_check
 
-    - name: Get latest repository information
-      command: borg info -v {{ backup_borg_repo }}
-      register: info
-      environment:
-        BORG_PASSPHRASE: '{{ backup_borg_passphrase }}'
+    - name: With repository information (if activated)
+      block:
+        - name: Get latest repository information
+          command: borg info -v {{ backup_borg_repo }}
+          register: info
+          environment:
+            BORG_PASSPHRASE: '{{ backup_borg_passphrase }}'
 
-    - name: Show borg Info
-      debug: var=info.stdout_lines
+        - name: Show borg info
+          debug: var=info.stdout_lines
 
-  when: borg_info.rc == 0
+      when: backup_borg_with_info
+
+  when: borg_create.rc == 0

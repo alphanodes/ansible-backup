@@ -90,3 +90,4 @@ backup_borg_compression: auto,zlib,6
 backup_borg_encryption_mode: repokey
 backup_borg_with_prune: yes
 backup_borg_with_check: yes
+backup_borg_with_info: yes
