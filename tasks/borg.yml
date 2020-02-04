@@ -18,7 +18,7 @@
   environment:
     BORG_PASSPHRASE: '{{ backup_borg_passphrase }}'
 
-- name: Init Repository
+- name: Init borg repository
   command: borg init --encryption={{ backup_borg_encryption_mode }} {{ backup_borg_repo }}
   ignore_errors: yes
   register: borg_init
@@ -26,7 +26,7 @@
     BORG_PASSPHRASE: '{{ backup_borg_passphrase }}'
   when: borg_info.rc != 0
 
-- name: Create backup
+- name: Create borg backup
   command: >
     borg create --compression {{ backup_borg_compression }} --stats
     {{ backup_borg_repo }}::{hostname}-{now:%Y-%m-%d_%H:%M}
@@ -35,12 +35,12 @@
   environment:
     BORG_PASSPHRASE: '{{ backup_borg_passphrase }}'
 
-- name: Run Repo tasks
+- name: Run repository tasks
   block:
     - name: Show borg create info
       debug: var=borg_create.stdout_lines
 
-    - name: Run prune
+    - name: Run borg prune
       command: >
         borg prune -v --list
         --keep-daily={{ backup_borg_prune_keep_daily }}
@@ -52,7 +52,7 @@
         BORG_PASSPHRASE: '{{ backup_borg_passphrase }}'
       when: backup_borg_with_prune
 
-    - name: Run Check (if activated)
+    - name: Run borg check (if activated)
       command: >
         borg check -v
         {{ backup_borg_repo }}
