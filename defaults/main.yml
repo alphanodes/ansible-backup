@@ -79,7 +79,6 @@ backup_borg_sets: []
 # /srv/borg_backup
 backup_borg_repo: ''
 backup_borg_passphrase: ''
-backup_borg_log: /var/log/borg.log
 backup_borg_prune_keep_daily: 7
 backup_borg_prune_keep_weekly: 4
 backup_borg_prune_keep_monthly: 2

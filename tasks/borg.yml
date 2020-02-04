@@ -28,7 +28,7 @@
 
 - name: Create backup
   command: >
-    borg create -v --compression {{ backup_borg_compression }} --stats
+    borg create --compression {{ backup_borg_compression }} --stats
     {{ backup_borg_repo }}::{hostname}-{now:%Y-%m-%d_%H:%M}
     {% for borg_set in backup_borg_sets %}{{ borg_set.src }} {% endfor %}
   register: borg_create
