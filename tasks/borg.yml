@@ -1,76 +1,42 @@
 - name: Check required variables for borg
   fail:
-    msg: 'backup_borg_sets, backup_borg_repo and backup_borg_passphrase has to be specified for borg'
+    msg: 'backup_borg_repo and backup_borg_passphrase or backup_borg_repo2 and backup_borg_passphrase2 has to be set'
   when: >
-    backup_borg_sets == ''
-    or backup_borg_repo == ''
-    or backup_borg_passphrase == ''
+    backup_borg_repo == '' and backup_borg_passphrase
+    or backup_borg_repo2 == '' and backup_borg_passphrase2
 
-- name: Be sure borg is installed
-  apt:
-    name: borgbackup
-    state: present
+- name: Include borg binary tasks
+  include_tasks: borg_from_binary.yml
 
-- name: Get repository information
-  command: borg info -v {{ backup_borg_repo }}
-  ignore_errors: yes
-  register: borg_info
-  environment:
-    BORG_PASSPHRASE: '{{ backup_borg_passphrase }}'
+- name: Include borg package tasks
+  include_tasks: borg_from_package.yml
 
-- name: Init borg repository
-  command: borg init --encryption={{ backup_borg_encryption_mode }} {{ backup_borg_repo }}
-  ignore_errors: yes
-  register: borg_init
-  environment:
-    BORG_PASSPHRASE: '{{ backup_borg_passphrase }}'
-  when: borg_info.rc != 0
+- name: Set facts borg_binary
+  set_fact:
+    borg_binary: "{{ backup_borg_binary if backup_borg_install_from_binary else '/usr/bin/borg' }}"
 
-- name: Create borg backup
-  command: >
-    borg create --compression {{ backup_borg_compression }} --stats
-    {{ backup_borg_repo }}::{hostname}-{now:%Y-%m-%d_%H:%M}
-    {% for borg_set in backup_borg_sets %}{{ borg_set.src }} {% endfor %}
-  register: borg_create
-  environment:
-    BORG_PASSPHRASE: '{{ backup_borg_passphrase }}'
-
-- name: Run repository tasks
+- name: Run REPO1 tasks
   block:
-    - name: Show borg create info
-      debug: var=borg_create.stdout_lines
+    - name: Set facts borg_repo for REPO1
+      set_fact:
+        borg_repo_name: 'REPO1'
+        borg_repo: "{{ backup_borg_repo }}"
+        borg_passphrase: "{{ backup_borg_passphrase }}"
 
-    - name: Run borg prune
-      command: >
-        borg prune -v --list
-        --keep-daily={{ backup_borg_prune_keep_daily }}
-        --keep-weekly={{ backup_borg_prune_keep_weekly }}
-        --keep-monthly={{ backup_borg_prune_keep_monthly }}
-        --keep-yearly={{ backup_borg_prune_keep_yearly }}
-        {{ backup_borg_repo }}
-      environment:
-        BORG_PASSPHRASE: '{{ backup_borg_passphrase }}'
-      when: backup_borg_with_prune
+    - name: Include Repo tasks for REPO1
+      include_tasks: borg_repo.yml
 
-    - name: Run borg check (if activated)
-      command: >
-        borg check -v
-        {{ backup_borg_repo }}
-      environment:
-        BORG_PASSPHRASE: '{{ backup_borg_passphrase }}'
-      when: backup_borg_with_check
+  when: backup_borg_repo != ''
 
-    - name: With repository information (if activated)
-      block:
-        - name: Get latest repository information
-          command: borg info -v {{ backup_borg_repo }}
-          register: info
-          environment:
-            BORG_PASSPHRASE: '{{ backup_borg_passphrase }}'
+- name: Run REPO2 tasks
+  block:
+    - name: Set facts borg_repo for REPO2
+      set_fact:
+        borg_repo_name: 'REPO2'
+        borg_repo: "{{ backup_borg_repo2 }}"
+        borg_passphrase: "{{ backup_borg_passphrase2 }}"
 
-        - name: Show borg info
-          debug: var=info.stdout_lines
+    - name: Include Repo tasks for REPO2
+      include_tasks: borg_repo.yml
 
-      when: backup_borg_with_info
-
-  when: borg_create.rc == 0
+  when: backup_borg_repo2 != ''

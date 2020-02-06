@@ -1,0 +1,81 @@
+- name: Get repository information - {{ borg_repo_name }}
+  command: "{{ borg_binary }} info -v {{ borg_repo }}"
+  ignore_errors: yes
+  register: borg_info
+  environment:
+    BORG_PASSPHRASE: '{{ borg_passphrase }}'
+
+- name: Init borg repository - {{ borg_repo_name }}
+  command: "{{ borg_binary }} init --encryption={{ backup_borg_encryption_mode }} {{ borg_repo }}"
+  ignore_errors: yes
+  register: borg_init
+  environment:
+    BORG_PASSPHRASE: '{{ borg_passphrase }}'
+  when: borg_info.rc != 0
+
+- name: Create borg backup - {{ borg_repo_name }}
+  command: >
+    {{ borg_binary }}
+    create
+    {{ backup_borg_create_params }}
+    {{ borg_repo }}::{{ backup_borg_create_name }}
+    {% for borg_dir in backup_borg_directories %}
+    {{ borg_dir }}
+    {% endfor %}
+    {% for borg_ex in backup_borg_excludes %}
+    --exclude {{ borg_ex }}
+    {% endfor %}
+  register: borg_create
+  environment:
+    BORG_PASSPHRASE: '{{ borg_passphrase }}'
+
+- name: Run repository tasks - {{ borg_repo_name }}
+  block:
+    - name: Show borg create stdout
+      debug: var=borg_create.stdout_lines
+
+    - name: Show borg create stderr
+      debug: var=borg_create.stderr_lines
+
+    - name: Run borg prune
+      command: >
+        {{ borg_binary }}
+        prune
+        {{ backup_borg_prune_params }}
+        --keep-daily={{ backup_borg_prune_keep_daily }}
+        --keep-weekly={{ backup_borg_prune_keep_weekly }}
+        --keep-monthly={{ backup_borg_prune_keep_monthly }}
+        --keep-yearly={{ backup_borg_prune_keep_yearly }}
+        {{ borg_repo }}
+      environment:
+        BORG_PASSPHRASE: '{{ borg_passphrase }}'
+      when: backup_borg_with_prune
+
+    - name: Run borg check (if activated) - {{ borg_repo_name }}
+      command: >
+        {{ borg_binary }}
+        check
+        {{ backup_borg_check_params }}
+        {{ borg_repo }}
+      environment:
+        BORG_PASSPHRASE: '{{ borg_passphrase }}'
+      when: backup_borg_with_check
+
+    - name: With repository information (if activated) - {{ borg_repo_name }}
+      block:
+        - name: Get latest repository information
+          command: >
+            {{ borg_binary }}
+            info
+            {{ backup_borg_info_params }}
+            {{ borg_repo }}
+          register: info
+          environment:
+            BORG_PASSPHRASE: '{{ borg_passphrase }}'
+
+        - name: Show borg info
+          debug: var=info.stdout_lines
+
+      when: backup_borg_with_info
+
+  when: borg_create.rc == 0

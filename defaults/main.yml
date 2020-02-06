@@ -74,11 +74,33 @@ backup_pre_commands: []
 # define commands, which should be run after backup
 backup_post_commands: []
 
-backup_borg_sets: []
+backup_borg_install_from_binary: no
+backup_borg_binary_version: '1.1.10'
+backup_borg_binary_platform: 'linux64'
+backup_borg_binary_uri: "https://github.com/borgbackup/borg/releases/download/{{ backup_borg_binary_version }}/borg-{{ backup_borg_binary_platform }}"
+backup_borg_binary: '/usr/local/bin/borg'
+
+# backup_borg_directories:
+#  - /etc
+#  - /home
+#  - /var
+backup_borg_directories: []
+
+# backup_borg_excludes: []
+#  - 're:^/var/lib/apt'
+#  - 're:^/var/[^/]+\/cache/'
+backup_borg_excludes: []
+
 # ssh://{{ storageboxes.no1.user }}@{{ storageboxes.no1.host }}:23/./backups/server1
 # /srv/borg_backup
 backup_borg_repo: ''
 backup_borg_passphrase: ''
+
+# there can be used a second repo to create redundant backups
+# @see: https://borgbackup.readthedocs.io/en/stable/faq.html#can-i-copy-or-synchronize-my-repo-to-another-location
+backup_borg_repo2: ''
+backup_borg_passphrase2: ''
+
 backup_borg_prune_keep_daily: 7
 backup_borg_prune_keep_weekly: 4
 backup_borg_prune_keep_monthly: 2
@@ -86,7 +108,13 @@ backup_borg_prune_keep_yearly: 1
 
 # see https://borgbackup.readthedocs.io/en/stable/usage/create.html#
 backup_borg_compression: auto,zlib,6
+backup_borg_create_name: '{hostname}-{now:%Y-%m-%d_%H:%M}'
+# use it for e.g. --one-file-system
+backup_borg_create_params: '--compression {{ backup_borg_compression }} -v --stats'
 backup_borg_encryption_mode: repokey
 backup_borg_with_prune: yes
+backup_borg_prune_params: '-v --list'
 backup_borg_with_check: yes
+backup_borg_check_params: '-v'
 backup_borg_with_info: yes
+backup_borg_info_params: '-v'

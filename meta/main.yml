@@ -22,6 +22,7 @@ galaxy_info:
     - backup
     - postgresql
     - mysql
+    - borgbackup
     - files
     - rotation
     - daily
