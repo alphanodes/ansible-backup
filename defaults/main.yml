@@ -74,6 +74,7 @@ backup_pre_commands: []
 # define commands, which should be run after backup
 backup_post_commands: []
 
+backup_with_borg: no
 backup_borg_install_from_binary: no
 backup_borg_binary_version: '1.1.10'
 backup_borg_binary_platform: 'linux64'

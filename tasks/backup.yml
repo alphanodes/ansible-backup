@@ -61,7 +61,7 @@
 - name: Include borg tasks
   include_tasks: borg.yml
   tags: sync
-  when: backup_remote_transfer == 'borg'
+  when: backup_with_borg
 
 - name: Run backup post commands
   command: "{{ item }}"

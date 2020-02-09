@@ -130,6 +130,12 @@ backup_remote_password: ''
 
 Password for remote sync. This is only used  with `backup_remote_transfer` is lftp.
 
+```
+backup_with_borg: ''
+```
+
+If backupborg should be run.
+
 
 ```
 backup_db_dump_format: .sql.gz
