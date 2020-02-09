@@ -8,44 +8,38 @@
   set_fact:
     borg_binary: "{{ backup_borg_binary if backup_borg_install_from_binary else '/usr/bin/borg' }}"
 
-- name: Run borg tasks for REPOs
+- name: Run REPO1 tasks
   block:
-    - name: Run REPO1 tasks
-      block:
-        - name: Check passphrase for REPO1
-          fail:
-            msg: 'backup_borg_repo requires to set backup_borg_passphrase, too'
-          when: backup_borg_passphrase == ''
+    - name: Check passphrase for REPO1
+      fail:
+        msg: 'backup_borg_repo requires to set backup_borg_passphrase, too'
+      when: backup_borg_passphrase == ''
 
-        - name: Set facts borg_repo for REPO1
-          set_fact:
-            borg_repo_name: 'REPO1'
-            borg_repo: "{{ backup_borg_repo }}"
-            borg_passphrase: "{{ backup_borg_passphrase }}"
+    - name: Set facts borg_repo for REPO1
+      set_fact:
+        borg_repo_name: 'REPO1'
+        borg_repo: "{{ backup_borg_repo }}"
+        borg_passphrase: "{{ backup_borg_passphrase }}"
 
-        - name: Include Repo tasks for REPO1
-          include_tasks: borg_repo.yml
+    - name: Include Repo tasks for REPO1
+      include_tasks: borg_repo.yml
 
-      when: backup_borg_repo != ''
+  when: backup_borg_repo != ''
 
-    - name: Run REPO2 tasks
-      block:
-        - name: Check passphrase for REPO2
-          fail:
-            msg: 'backup_borg_repo2 requires to set backup_borg_passphrase2, too'
-          when: backup_borg_passphrase2 == ''
+- name: Run REPO2 tasks
+  block:
+    - name: Check passphrase for REPO2
+      fail:
+        msg: 'backup_borg_repo2 requires to set backup_borg_passphrase2, too'
+      when: backup_borg_passphrase2 == ''
 
-        - name: Set facts borg_repo for REPO2
-          set_fact:
-            borg_repo_name: 'REPO2'
-            borg_repo: "{{ backup_borg_repo2 }}"
-            borg_passphrase: "{{ backup_borg_passphrase2 }}"
+    - name: Set facts borg_repo for REPO2
+      set_fact:
+        borg_repo_name: 'REPO2'
+        borg_repo: "{{ backup_borg_repo2 }}"
+        borg_passphrase: "{{ backup_borg_passphrase2 }}"
 
-        - name: Include Repo tasks for REPO2
-          include_tasks: borg_repo.yml
+    - name: Include Repo tasks for REPO2
+      include_tasks: borg_repo.yml
 
-      when: backup_borg_repo2 != ''
-
-  when: >
-    backup_borg_repo == '' and backup_borg_passphrase
-    or backup_borg_repo2 == '' and backup_borg_passphrase2
+  when: backup_borg_repo2 != ''
