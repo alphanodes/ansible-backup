@@ -41,6 +41,11 @@
   tags: postgresql
   when: backup_with_postgresql
 
+- name: Include MongoDB tasks
+  include_tasks: mongodb.yml
+  tags: mongodb
+  when: backup_with_mongodb
+
 - name: Include files tasks
   include_tasks: files.yml
   tags: files

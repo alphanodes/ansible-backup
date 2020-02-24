@@ -37,6 +37,11 @@ backup_db_dump_format: .sql.gz
 
 backup_with_mysql: no
 backup_with_postgresql: no
+# all databases are stored in one dump file for mongodb
+# (use can use mongorestore with --db to restore a specific database)
+backup_with_mongodb: no
+
+backup_mongodb_options: '--archive --gzip'
 
 backup_mysql_db_excludes:
   - performance_schema

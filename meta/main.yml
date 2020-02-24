@@ -7,7 +7,7 @@ galaxy_info:
   author: alexandermeindl
   company: AlphaNodes GmbH
   license: GPL Version 3
-  min_ansible_version: 2.5
+  min_ansible_version: 2.8
   platforms:
     - name: Ubuntu
       versions:
@@ -22,6 +22,7 @@ galaxy_info:
     - backup
     - postgresql
     - mysql
+    - mongodb
     - borgbackup
     - files
     - rotation

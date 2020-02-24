@@ -148,14 +148,26 @@ Uncompressed SQL files (.sql) as well as bzip2 (.bz2), gzip (.gz) and xz. At the
 backup_with_mysql: no
 ```
 
-Run MySQL (MariaDB) backup dump.
+Run MySQL (MariaDB) backup dump. All databases are stored in separate files.
 
 
 ```
 backup_with_postgresql: no
 ```
 
-Run PostgreSQL backup dump.
+Run PostgreSQL backup dump. All databases are stored in separate files.
+
+```
+backup_with_mongodb: no
+```
+
+Run MongoDB backup dump. All databases are stored in a single archive file.
+
+```
+backup_mongodb_options: '--archive --gzip'
+```
+
+Options for mongodb dump.
 
 
 ```
