@@ -34,17 +34,17 @@
 - name: Include MySQL tasks
   include_tasks: mysql.yml
   tags: mysql
-  when: backup_with_mysql
+  when: backup_with_mysql | bool
 
 - name: Include PostgreSQL tasks
   include_tasks: postgresql.yml
   tags: postgresql
-  when: backup_with_postgresql
+  when: backup_with_postgresql | bool
 
 - name: Include MongoDB tasks
   include_tasks: mongodb.yml
   tags: mongodb
-  when: backup_with_mongodb
+  when: backup_with_mongodb | bool
 
 - name: Include files tasks
   include_tasks: files.yml
@@ -66,7 +66,7 @@
 - name: Include borg tasks
   include_tasks: borg.yml
   tags: sync
-  when: backup_with_borg
+  when: backup_with_borg | bool
 
 - name: Run backup post commands
   command: "{{ item }}"
