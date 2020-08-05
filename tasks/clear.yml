@@ -83,7 +83,7 @@
   changed_when: false
   become: "{{ backup_files_become | default(omit) }}"
   become_user: '{{ backup_files_become_user | default(omit) }}'
-  when: backup_one_per_day_limit
+  when: backup_one_per_day_limit | bool
 
 - name: Remove existing backups of the current day
   file:
