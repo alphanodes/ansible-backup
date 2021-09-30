@@ -7,17 +7,16 @@ galaxy_info:
   author: alexandermeindl
   company: AlphaNodes GmbH
   license: GPL Version 3
-  min_ansible_version: '2.8'
+  min_ansible_version: '2.9'
   platforms:
     - name: Ubuntu
       versions:
-      - xenial
-      - bionic
-      - focal
+        - bionic
+        - focal
     - name: Debian
       versions:
-      - stretch
-      - buster
+        - buster
+        - bullseye
   galaxy_tags:
     - backup
     - postgresql
