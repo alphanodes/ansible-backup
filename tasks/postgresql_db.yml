@@ -4,7 +4,7 @@
 - name: Create postgresql dump - {{ db }}
   shell: "pg_dump {{ backup_postgresqldump_options }} {{ db }} > {{ backup_dir }}/{{ backup_file_name }}"
   become_user: postgres
-  become: yes
+  become: true
 
 - name: Create hash file for dump - {{ db }}
   shell: "sha256sum {{ backup_file_name }} > {{ backup_file_name }}.sha256"

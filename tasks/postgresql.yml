@@ -3,7 +3,7 @@
   register: db_list
   changed_when: db_list.rc != 0
   become_user: postgres
-  become: yes
+  become: true
 
 - name: Include PostgreSQL db tasks
   include_tasks: postgresql_db.yml

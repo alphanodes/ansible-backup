@@ -145,20 +145,20 @@ Uncompressed SQL files (.sql) as well as bzip2 (.bz2), gzip (.gz) and xz. At the
 
 
 ```
-backup_with_mysql: no
+backup_with_mysql: false
 ```
 
 Run MySQL (MariaDB) backup dump. All databases are stored in separate files.
 
 
 ```
-backup_with_postgresql: no
+backup_with_postgresql: false
 ```
 
 Run PostgreSQL backup dump. All databases are stored in separate files.
 
 ```
-backup_with_mongodb: no
+backup_with_mongodb: false
 ```
 
 Run MongoDB backup dump. All databases are stored in a single archive file.
@@ -178,7 +178,7 @@ backup_mysql_db_excludes:
 ```
 
 ```
-backup_mysql_single_transaction: yes
+backup_mysql_single_transaction: true
 ```
 
 ```
@@ -196,7 +196,7 @@ PostgreSQL dump options.
 
 
 ```
-backup_create_hashfiles: no
+backup_create_hashfiles: false
 ```
 
 Create hash files of all backup sets.
@@ -204,7 +204,7 @@ Create hash files of all backup sets.
 
 
 ```
-backup_files_unsafe_writes: no
+backup_files_unsafe_writes: false
 ```
 
 If `backup_files_unsafe_writes` is yes and changed files are found while creating tar files, no error are reported. tar runs with the additional options `--warning=no-file-removed --warning=no-file-changed --warning=no-file-ignored`.
@@ -218,7 +218,7 @@ Backup sets for file backup. `name` is used as backup file name. `src` is the di
 
 
 ```
-backup_one_per_day_limit: yes
+backup_one_per_day_limit: true
 ```
 
 Create only one backup set per day. Existing backup sets of same day will be removed.
@@ -232,7 +232,7 @@ If sync_master is defined, backup will be skipped. You can use it for replicatio
 
 
 ```
-backup_skip_sync_clients: yes
+backup_skip_sync_clients: true
 ```
 
 If sync_master is defined, this means it is a sync_client.
@@ -274,7 +274,7 @@ List of commands, which runs after backup dump has been created.
     backup_max_days: 14
     backup_max_weeks: 4
     backup_max_months: 6
-    backup_with_postgresql: yes
+    backup_with_postgresql: true
     backup_dir_mode: 0770
     backup_dir_group: postgres
     backup_sets:
@@ -282,7 +282,7 @@ List of commands, which runs after backup dump has been created.
         src: /etc
       - name: jenkins
         src: /var/lib/jenkins
-        unsafe_writes: yes
+        unsafe_writes: true
         excludes:
           - builds
           - workspace

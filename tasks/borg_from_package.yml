@@ -8,5 +8,5 @@
   apt:
     name: borgbackup
     state: absent
-    purge: yes
+    purge: true
   when: backup_borg_install_from_binary

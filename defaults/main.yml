@@ -35,11 +35,11 @@ backup_remote_password: ''
 # (at the moment only used for mysql dumps)
 backup_db_dump_format: .sql.gz
 
-backup_with_mysql: no
-backup_with_postgresql: no
+backup_with_mysql: false
+backup_with_postgresql: false
 # all databases are stored in one dump file for mongodb
 # (use can use mongorestore with --db to restore a specific database)
-backup_with_mongodb: no
+backup_with_mongodb: false
 
 backup_mongodb_options: '--archive --gzip'
 
@@ -48,15 +48,15 @@ backup_mysql_db_excludes:
   - information_schema
   - sys
 
-backup_mysql_single_transaction: yes
+backup_mysql_single_transaction: true
 
 # Custom mysql options (always sql.gz is used)
 # backup_mysqldump_options: '--extended-insert=true --opt --single-transaction'
 backup_mysqldump_options: ''
 
 backup_postgresqldump_options: "--no-owner -Fc"
-backup_create_hashfiles: no
-backup_files_unsafe_writes: no
+backup_create_hashfiles: false
+backup_files_unsafe_writes: false
 
 backup_sets: []
 # - name: etc
@@ -64,14 +64,14 @@ backup_sets: []
 
 # create only one backup per day
 # (existing backup of same day will be removed)
-backup_one_per_day_limit: yes
+backup_one_per_day_limit: true
 
 # if sync_master is defined, backup will be skipped
 # (you can use it for replication environments)
-#sync_master: anything
+# sync_master: anything
 
 # if sync_master is defined, this means it is a sync_client
-backup_skip_sync_clients: yes
+backup_skip_sync_clients: true
 
 # define commands, which should be run before backup
 backup_pre_commands: []
@@ -79,8 +79,8 @@ backup_pre_commands: []
 # define commands, which should be run after backup
 backup_post_commands: []
 
-backup_with_borg: no
-backup_borg_install_from_binary: no
+backup_with_borg: false
+backup_borg_install_from_binary: false
 backup_borg_binary_version: '1.1.10'
 backup_borg_binary_platform: 'linux64'
 backup_borg_binary_uri: "https://github.com/borgbackup/borg/releases/download/{{ backup_borg_binary_version }}/borg-{{ backup_borg_binary_platform }}"
@@ -118,9 +118,9 @@ backup_borg_create_name: '{hostname}-{now:%Y-%m-%d_%H:%M}'
 # use it for e.g. --one-file-system
 backup_borg_create_params: '--compression {{ backup_borg_compression }} -v --stats'
 backup_borg_encryption_mode: repokey
-backup_borg_with_prune: yes
+backup_borg_with_prune: true
 backup_borg_prune_params: '-v --list'
-backup_borg_with_check: yes
+backup_borg_with_check: true
 backup_borg_check_params: '-v'
-backup_borg_with_info: yes
+backup_borg_with_info: true
 backup_borg_info_params: '-v'

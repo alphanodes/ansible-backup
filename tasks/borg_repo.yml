@@ -1,13 +1,13 @@
 - name: Get repository information - {{ borg_repo_name }}
   command: "{{ borg_binary }} info -v {{ borg_repo }}"
-  ignore_errors: yes
+  ignore_errors: true
   register: borg_info
   environment:
     BORG_PASSPHRASE: '{{ borg_passphrase }}'
 
 - name: Init borg repository - {{ borg_repo_name }}
   command: "{{ borg_binary }} init --encryption={{ backup_borg_encryption_mode }} {{ borg_repo }}"
-  ignore_errors: yes
+  ignore_errors: true
   register: borg_init
   environment:
     BORG_PASSPHRASE: '{{ borg_passphrase }}'
