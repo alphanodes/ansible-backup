@@ -1,3 +1,4 @@
+---
 - name: Set backup file name - {{ db }}
   set_fact: backup_file_name="db-{{ db }}-{{ date_stamp }}-{{ backup_file_period }}.pg_dump"
 

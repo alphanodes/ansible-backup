@@ -1,3 +1,4 @@
+---
 - name: Install borg package
   apt:
     name: borgbackup

@@ -1,3 +1,4 @@
+---
 - name: Get postgresql databases
   command: "psql --tuples-only -P format=unaligned -c \"SELECT datname FROM pg_database WHERE NOT datistemplate AND datname <> 'postgres'\""
   register: db_list

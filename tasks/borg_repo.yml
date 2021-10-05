@@ -1,3 +1,4 @@
+---
 - name: Get repository information - {{ borg_repo_name }}
   command: "{{ borg_binary }} info -v {{ borg_repo }}"
   ignore_errors: true

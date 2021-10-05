@@ -1,3 +1,4 @@
+---
 - name: Be sure rsync is installed
   apt:
     name: rsync

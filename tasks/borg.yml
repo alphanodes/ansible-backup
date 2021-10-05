@@ -1,3 +1,4 @@
+---
 - name: Include borg binary tasks
   include_tasks: borg_from_binary.yml
 

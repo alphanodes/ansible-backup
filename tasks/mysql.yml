@@ -1,3 +1,4 @@
+---
 - name: Get MySQL databases
   command: "mysql -Bse 'show databases'"
   register: db_list

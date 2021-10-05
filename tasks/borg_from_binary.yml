@@ -1,3 +1,4 @@
+---
 - name: Borg from binary tasks
   block:
     - name: Get binary info

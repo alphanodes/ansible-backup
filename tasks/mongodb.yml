@@ -1,3 +1,4 @@
+---
 - name: Set backup file name - mongodb databases
   set_fact: backup_file_name="db-{{ date_stamp }}-{{ backup_file_period }}.mongo_archive"
 

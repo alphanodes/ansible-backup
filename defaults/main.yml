@@ -1,3 +1,4 @@
+---
 # defaults file for backup
 
 backup_dir: /srv/backups
