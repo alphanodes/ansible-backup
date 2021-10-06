@@ -2,7 +2,8 @@
 - name: Borg from binary tasks
   block:
     - name: Get binary info
-      stat: path={{ backup_borg_binary }}
+      stat:
+        path: '{{ backup_borg_binary }}'
       register: borg_binary_info
 
     - name: Set facts borg_binary_src
@@ -10,7 +11,8 @@
         borg_binary_src: "{{ software_dir | default('/srv/software') }}/borg-{{ backup_borg_binary_platform }}-{{ backup_borg_binary_version }}"
 
     - name: Get binary src info
-      stat: path={{ borg_binary_src }}
+      stat:
+        path: '{{ borg_binary_src }}'
       register: borg_binary_src_info
 
     - name: Download borg binary
