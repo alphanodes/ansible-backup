@@ -47,7 +47,7 @@
       - '*-weekly.*'
     age: "{{ backup_max_weeks }}w"
     age_stamp: mtime
-  become: "{{ backup_files_become | default(omit)}} "
+  become: "{{ backup_files_become | default(omit) }}"
   become_user: "{{ backup_files_become_user | default(omit) }}"
   register: backup_files
 
