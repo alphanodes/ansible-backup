@@ -41,7 +41,7 @@
 
 - name: Find old weekly files
   find:
-    path: "{{ backup_dir }}"
+    paths: "{{ backup_dir }}"
     file_type: file
     patterns:
       - '*-weekly.*'
@@ -62,7 +62,7 @@
 
 - name: Find old monthly files
   find:
-    path: "{{ backup_dir }}"
+    paths: "{{ backup_dir }}"
     file_type: file
     patterns:
       - '*-monthly.*'
