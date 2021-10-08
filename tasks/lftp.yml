@@ -18,4 +18,5 @@
   changed_when: "'Transferring file' in lftp_result.stdout or 'Removing old file' in lftp_result.stdout"
 
 - name: Output of lftp sync
-  debug: var=lftp_result.stdout_lines
+  debug:
+    var: lftp_result.stdout_lines

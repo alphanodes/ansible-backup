@@ -12,7 +12,8 @@
   when: backup_max_days < 1 or backup_max_weeks < 1 or backup_max_months < 1
 
 - name: Calc daily, weekly or monthly period
-  set_fact: backup_file_period="{{ 'monthly' if ansible_date_time.day == '01' else 'weekly' if ansible_date_time.weekday_number == '1' else 'daily' }}"
+  set_fact:
+    backup_file_period: "{{ 'monthly' if ansible_date_time.day == '01' else 'weekly' if ansible_date_time.weekday_number == '1' else 'daily' }}"
 
 - name: Ensures backup_dir exists
   file:
@@ -21,12 +22,12 @@
     mode: '{{ backup_dir_mode }}'
     owner: '{{ backup_dir_owner }}'
     group: '{{ backup_dir_group }}'
-  become: backup_files_become | default(omit)
-  become_user: '{{ backup_files_become_user | default(omit) }}'
+  become: "{{ backup_files_become | default(omit) }}"
+  become_user: "{{ backup_files_become_user | default(omit) }}"
 
 - name: Run backup pre commands
   command: "{{ item }}"
-  loop: '{{ backup_pre_commands | default([]) }}'
+  loop: "{{ backup_pre_commands | default([]) }}"
 
 - name: Include clear tasks
   include_tasks: clear.yml

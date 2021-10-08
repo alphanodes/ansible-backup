@@ -33,10 +33,12 @@
 - name: Run repository tasks - {{ borg_repo_name }}
   block:
     - name: Show borg create stdout
-      debug: var=borg_create.stdout_lines
+      debug:
+        var: borg_create.stdout_lines
 
     - name: Show borg create stderr
-      debug: var=borg_create.stderr_lines
+      debug:
+        var: borg_create.stderr_lines
 
     - name: Run borg prune
       command: >
@@ -75,7 +77,8 @@
             BORG_PASSPHRASE: '{{ borg_passphrase }}'
 
         - name: Show borg info
-          debug: var=info.stdout_lines
+          debug:
+            var: info.stdout_lines
 
       when: backup_borg_with_info
 
