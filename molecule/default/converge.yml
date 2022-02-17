@@ -11,4 +11,4 @@
         src: /root
 
   roles:
-    - role: AlphaNodes.backup
+    - role: alphanodes.backup
