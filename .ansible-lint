@@ -1,5 +1,4 @@
 skip_list:
   # see https://github.com/ansible-community/ansible-lint/issues/457
   - 'empty-string-compare'
-  - 'role-name'
   - 'yaml'

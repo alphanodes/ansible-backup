@@ -3,6 +3,7 @@ dependencies: []
 
 galaxy_info:
   role_name: backup
+  namespace: alphanodes
   description: Run daily backups for files, MySQL databases and PostgreSQL databases
   author: alexandermeindl
   company: AlphaNodes GmbH
