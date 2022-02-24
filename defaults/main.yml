@@ -2,7 +2,7 @@
 # defaults file for backup
 
 backup_dir: /srv/backups
-backup_dir_mode: 0755
+backup_dir_mode: '0755'
 backup_dir_owner: root
 backup_dir_group: root
 

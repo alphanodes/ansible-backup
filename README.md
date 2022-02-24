@@ -29,9 +29,10 @@ backup_dir: /srv/backups
 ```
 
 Directory for backups. Make sure there is enough disk space at this disk partition.
+Use quotes to make sure there are no converting problem (e.g. with to_nice_yaml)
 
 ```yaml
-backup_dir_mode: 0755
+backup_dir_mode: '0755'
 ```
 
 Directory permission for `backup_dir`
@@ -246,7 +247,7 @@ List of commands, which runs after backup dump has been created.
     backup_max_weeks: 4
     backup_max_months: 6
     backup_with_postgresql: true
-    backup_dir_mode: 0770
+    backup_dir_mode: '0770'
     backup_dir_group: postgres
     backup_sets:
       - name: etc
