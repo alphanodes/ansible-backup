@@ -1,6 +1,6 @@
 ---
 - name: Get MySQL databases
-  command: "mysql -Bse 'show databases'"
+  command: mysql{{ ' --defaults-extra-file=' + backup_mysql_defaults_extra_file if backup_mysql_defaults_extra_file != '' else '' }} -Bse 'show databases'
   register: db_list
   changed_when: db_list.rc != 0
 
