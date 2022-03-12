@@ -7,10 +7,10 @@ backup_dir_owner: root
 backup_dir_group: root
 
 # Amount of days for daily backup sets
-backup_max_days: 7
+backup_max_days: 3
 
 # Amount of weeks for weekly backup sets
-backup_max_weeks: 1
+backup_max_weeks: 2
 
 # Amount of months for monthly backup sets
 backup_max_months: 1
