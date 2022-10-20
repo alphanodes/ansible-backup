@@ -32,7 +32,7 @@ backup_remote_transfer: rsync
 backup_remote_user: ''
 backup_remote_password: ''
 # see https://lftp.yar.ru/lftp-man.html
-backup_lftp_mirror_options: '-R -c -v'
+backup_lftp_mirror_options: '-R -c -e -v'
 
 # Uncompressed SQL files (.sql) as well as bzip2 (.bz2), gzip (.gz) and xz
 # (at the moment only used for mysql dumps)
