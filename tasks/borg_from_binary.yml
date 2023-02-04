@@ -2,38 +2,38 @@
 - name: Borg from binary tasks
   block:
     - name: Get binary info
-      stat:
+      ansible.builtin.stat:
         path: '{{ backup_borg_binary }}'
       register: borg_binary_info
 
     - name: Set facts borg_binary_src
-      set_fact:
+      ansible.builtin.set_fact:
         borg_binary_src: "{{ software_dir | default('/srv/software') }}/borg-{{ backup_borg_binary_platform }}-{{ backup_borg_binary_version }}"
 
     - name: Get binary src info
-      stat:
+      ansible.builtin.stat:
         path: '{{ borg_binary_src }}'
       register: borg_binary_src_info
 
     - name: Download borg binary
-      get_url:
+      ansible.builtin.get_url:
         url: '{{ backup_borg_binary_uri }}'
         dest: '{{ borg_binary_src }}'
       when: not borg_binary_src_info.stat.exists
 
     - name: Install borg binary
-      command: mv {{  borg_binary_src }} {{ backup_borg_binary }}
+      ansible.builtin.command: mv {{ borg_binary_src }} {{ backup_borg_binary }}
       when: not borg_binary_src_info.stat.exists or not borg_binary_info.stat.exists
 
     - name: Set borg binary permissions
-      file:
+      ansible.builtin.file:
         path: '{{ backup_borg_binary }}'
         mode: 0755
 
   when: backup_borg_install_from_binary
 
 - name: Remove binary, because system package is used
-  file:
+  ansible.builtin.file:
     path: '{{ backup_borg_binary }}'
     state: absent
   when: not backup_borg_install_from_binary

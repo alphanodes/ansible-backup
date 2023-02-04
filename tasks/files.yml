@@ -1,23 +1,23 @@
 ---
 - name: Set facts
-  set_fact:
+  ansible.builtin.set_fact:
     excludes: "{{ instance.excludes | default([]) }}"
     unsafe_writes: "{{ instance.unsafe_writes | default(backup_files_unsafe_writes) }}"
 
 - name: Set warning options
-  set_fact:
+  ansible.builtin.set_fact:
     warning_options: "{{ '--warning=no-file-removed --warning=no-file-changed --warning=no-file-ignored' if unsafe_writes else '' }}"
 
 - name: Set tar return code
-  set_fact:
+  ansible.builtin.set_fact:
     tar_rc: "{{ 1 if warning_options == '' else 2 }}"
 
 - name: Set backup file name
-  set_fact:
+  ansible.builtin.set_fact:
     backup_file_name: "{{ instance.name }}-{{ date_stamp }}-{{ backup_file_period }}.tar.gz"
 
 - name: Create backup of files/directories - {{ instance.name }}
-  command: "tar {{ warning_options }} --exclude={{ excludes | join(' --exclude=') }} -cplzf {{ backup_dir }}/{{ backup_file_name }} {{ instance.src | basename }}"
+  ansible.builtin.command: "tar {{ warning_options }} --exclude={{ excludes | join(' --exclude=') }} -cplzf {{ backup_dir }}/{{ backup_file_name }} {{ instance.src | basename }}"
   register: tar_cmd
   failed_when: tar_cmd.rc >= tar_rc|int
   become: "{{ backup_files_become | default(omit) }}"
@@ -27,7 +27,7 @@
     warn: false
 
 - name: Create hash file of backup sets - {{ instance.name }}
-  shell: "sha256sum {{ backup_file_name }} > {{ backup_dir }}/{{ backup_file_name }}.sha256"
+  ansible.builtin.shell: "sha256sum {{ backup_file_name }} > {{ backup_dir }}/{{ backup_file_name }}.sha256"
   become: "{{ backup_files_become | default(omit) }}"
   become_user: '{{ backup_files_become_user | default(omit) }}'
   args:

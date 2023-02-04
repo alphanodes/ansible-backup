@@ -1,22 +1,22 @@
 ---
 - name: Set date and day stamp
-  set_fact:
-    date_stamp: "{{ lookup('pipe','date +%Y%m%d%H%M') }}"
-    day_stamp: "{{ lookup('pipe','date +%Y%m%d') }}"
-    date_readable_stamp: "{{ lookup('pipe','date +%Y-%m-%d_%H:%M') }}"
+  ansible.builtin.set_fact:
+    date_stamp: "{{ lookup('pipe', 'date +%Y%m%d%H%M') }}"
+    day_stamp: "{{ lookup('pipe', 'date +%Y%m%d') }}"
+    date_readable_stamp: "{{ lookup('pipe', 'date +%Y-%m-%d_%H:%M') }}"
   tags: vars
 
 - name: Check valid backup_max_days, backup_max_weeks and backup_max_months
-  fail:
+  ansible.builtin.fail:
     msg: 'backup_max_days, backup_max_weeks and backup_max_months needs at least value 1 or higher'
   when: backup_max_days < 1 or backup_max_weeks < 1 or backup_max_months < 1
 
 - name: Calc daily, weekly or monthly period
-  set_fact:
+  ansible.builtin.set_fact:
     backup_file_period: "{{ 'monthly' if ansible_date_time.day == '01' else 'weekly' if ansible_date_time.weekday_number == '1' else 'daily' }}"
 
 - name: Ensures backup_dir exists
-  file:
+  ansible.builtin.file:
     path: '{{ backup_dir }}'
     state: directory
     mode: '{{ backup_dir_mode }}'
@@ -26,50 +26,50 @@
   become_user: "{{ backup_files_become_user | default(omit) }}"
 
 - name: Run backup pre commands
-  command: "{{ item }}"
+  ansible.builtin.command: "{{ item }}"
   loop: "{{ backup_pre_commands | default([]) }}"
 
 - name: Include clear tasks
-  include_tasks: clear.yml
+  ansible.builtin.include_tasks: clear.yml
   tags: clear
 
 - name: Include MySQL tasks
-  include_tasks: mysql.yml
+  ansible.builtin.include_tasks: mysql.yml
   tags: mysql
   when: backup_with_mysql | bool
 
 - name: Include PostgreSQL tasks
-  include_tasks: postgresql.yml
+  ansible.builtin.include_tasks: postgresql.yml
   tags: postgresql
   when: backup_with_postgresql | bool
 
 - name: Include MongoDB tasks
-  include_tasks: mongodb.yml
+  ansible.builtin.include_tasks: mongodb.yml
   tags: mongodb
   when: backup_with_mongodb | bool
 
 - name: Include files tasks
-  include_tasks: files.yml
+  ansible.builtin.include_tasks: files.yml
   tags: files
   loop: "{{ backup_sets | default([]) }}"
   loop_control:
     loop_var: instance
 
 - name: Include rsync tasks
-  include_tasks: rsync.yml
+  ansible.builtin.include_tasks: rsync.yml
   tags: sync
   when: backup_remote_host != '' and backup_remote_transfer == 'rsync'
 
 - name: Include lftp tasks
-  include_tasks: lftp.yml
+  ansible.builtin.include_tasks: lftp.yml
   tags: sync
   when: backup_remote_host != '' and backup_remote_transfer == 'lftp'
 
 - name: Include borg tasks
-  include_tasks: borg.yml
+  ansible.builtin.include_tasks: borg.yml
   tags: sync
   when: backup_with_borg | bool
 
 - name: Run backup post commands
-  command: "{{ item }}"
+  ansible.builtin.command: "{{ item }}"
   loop: '{{ backup_post_commands | default([]) }}'

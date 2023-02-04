@@ -1,6 +1,6 @@
 ---
 - name: Check required variables for lftp
-  fail:
+  ansible.builtin.fail:
     msg: 'backup_remote_user, backup_remote_password and backup_remote_host has to be specified for lftp'
   when: >
     backup_remote_user == ''
@@ -8,15 +8,15 @@
     or backup_remote_host == ''
 
 - name: Be sure lftp is installed
-  apt:
+  ansible.builtin.apt:
     name: lftp
     state: present
 
 - name: Mirror backups to remote host {{ backup_remote_host }}
-  command: lftp -c "open -u {{ backup_remote_user }},{{ backup_remote_password }} {{ backup_remote_host }}; mirror {{ backup_lftp_mirror_options }} {{ backup_dir }} {{ backup_remote_dir }}"
+  ansible.builtin.command: lftp -c "open -u {{ backup_remote_user }},{{ backup_remote_password }} {{ backup_remote_host }}; mirror {{ backup_lftp_mirror_options }} {{ backup_dir }} {{ backup_remote_dir }}"
   register: lftp_result
   changed_when: "'Transferring file' in lftp_result.stdout or 'Removing old file' in lftp_result.stdout"
 
 - name: Output of lftp sync
-  debug:
+  ansible.builtin.debug:
     var: lftp_result.stdout_lines

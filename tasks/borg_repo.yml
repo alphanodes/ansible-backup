@@ -1,13 +1,13 @@
 ---
 - name: Get repository information - {{ borg_repo_name }}
-  command: "{{ borg_binary }} info -v {{ borg_repo }}"
+  ansible.builtin.command: "{{ borg_binary }} info -v {{ borg_repo }}"
   ignore_errors: true
   register: borg_info
   environment:
     BORG_PASSPHRASE: '{{ borg_passphrase }}'
 
 - name: Init borg repository - {{ borg_repo_name }}
-  command: "{{ borg_binary }} init --encryption={{ backup_borg_encryption_mode }} {{ borg_repo }}"
+  ansible.builtin.command: "{{ borg_binary }} init --encryption={{ backup_borg_encryption_mode }} {{ borg_repo }}"
   ignore_errors: true
   register: borg_init
   environment:
@@ -15,7 +15,7 @@
   when: borg_info.rc != 0
 
 - name: Create borg backup - {{ borg_repo_name }}
-  command: >
+  ansible.builtin.command: >
     {{ borg_binary }}
     create
     {{ backup_borg_create_params }}
@@ -33,15 +33,15 @@
 - name: Run repository tasks - {{ borg_repo_name }}
   block:
     - name: Show borg create stdout
-      debug:
+      ansible.builtin.debug:
         var: borg_create.stdout_lines
 
     - name: Show borg create stderr
-      debug:
+      ansible.builtin.debug:
         var: borg_create.stderr_lines
 
     - name: Run borg prune
-      command: >
+      ansible.builtin.command: >
         {{ borg_binary }}
         prune
         {{ backup_borg_prune_params }}
@@ -55,7 +55,7 @@
       when: backup_borg_with_prune
 
     - name: Run borg check (if activated) - {{ borg_repo_name }}
-      command: >
+      ansible.builtin.command: >
         {{ borg_binary }}
         check
         {{ backup_borg_check_params }}
@@ -67,7 +67,7 @@
     - name: With repository information (if activated) - {{ borg_repo_name }}
       block:
         - name: Get latest repository information
-          command: >
+          ansible.builtin.command: >
             {{ borg_binary }}
             info
             {{ backup_borg_info_params }}
@@ -77,7 +77,7 @@
             BORG_PASSPHRASE: '{{ borg_passphrase }}'
 
         - name: Show borg info
-          debug:
+          ansible.builtin.debug:
             var: info.stdout_lines
 
       when: backup_borg_with_info

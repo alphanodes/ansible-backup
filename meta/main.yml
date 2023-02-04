@@ -8,7 +8,7 @@ galaxy_info:
   author: alexandermeindl
   company: AlphaNodes GmbH
   license: GPL Version 3
-  min_ansible_version: '2.9'
+  min_ansible_version: '2.14'
   platforms:
     - name: Ubuntu
       versions:

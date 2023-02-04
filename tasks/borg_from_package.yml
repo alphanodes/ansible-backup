@@ -1,12 +1,12 @@
 ---
 - name: Install borg package
-  apt:
+  ansible.builtin.apt:
     name: borgbackup
     state: present
   when: not backup_borg_install_from_binary
 
 - name: Uninstall borg package, if from binary
-  apt:
+  ansible.builtin.apt:
     name: borgbackup
     state: absent
     purge: true

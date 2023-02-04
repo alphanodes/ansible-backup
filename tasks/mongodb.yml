@@ -1,13 +1,13 @@
 ---
 - name: Set backup file name - mongodb databases
-  set_fact: backup_file_name="db-{{ date_stamp }}-{{ backup_file_period }}.mongo_archive"
+  ansible.builtin.set_fact: backup_file_name="db-{{ date_stamp }}-{{ backup_file_period }}.mongo_archive"
 
 # @see https://docs.mongodb.com/manual/reference/program/mongodump/
 - name: Create mongodb dump
-  shell: "mongodump {{ backup_mongodb_options }} > {{ backup_dir }}/{{ backup_file_name }}"
+  ansible.builtin.shell: "mongodump {{ backup_mongodb_options }} > {{ backup_dir }}/{{ backup_file_name }}"
 
 - name: Create hash file for mongodb archive file
-  shell: "sha256sum {{ backup_file_name }} > {{ backup_file_name }}.sha256"
+  ansible.builtin.shell: "sha256sum {{ backup_file_name }} > {{ backup_file_name }}.sha256"
   args:
     chdir: "{{ backup_dir }}"
   when: backup_create_hashfiles

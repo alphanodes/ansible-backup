@@ -1,6 +1,6 @@
 ---
 - name: Find temporary backup files
-  find:
+  ansible.builtin.find:
     paths: "{{ backup_dir }}"
     file_type: file
     patterns:
@@ -10,7 +10,7 @@
   register: backup_tmp
 
 - name: Remove temporary backup files
-  file:
+  ansible.builtin.file:
     path: "{{ item.path }}"
     state: absent
   become: "{{ backup_files_become | default(omit) }}"
@@ -19,7 +19,7 @@
   when: backup_tmp.matched > 0
 
 - name: Find old daily files
-  find:
+  ansible.builtin.find:
     paths: "{{ backup_dir }}"
     file_type: file
     patterns:
@@ -31,7 +31,7 @@
   register: backup_files
 
 - name: Remove old daily files
-  file:
+  ansible.builtin.file:
     path: '{{ item.path }}'
     state: absent
   loop: "{{ backup_files.files | default([]) }}"
@@ -40,7 +40,7 @@
   when: backup_files.matched > 0
 
 - name: Find old weekly files
-  find:
+  ansible.builtin.find:
     paths: "{{ backup_dir }}"
     file_type: file
     patterns:
@@ -52,7 +52,7 @@
   register: backup_files
 
 - name: Remove old weekly files
-  file:
+  ansible.builtin.file:
     path: "{{ item.path }}"
     state: absent
   loop: "{{ backup_files.files | default([]) }}"
@@ -61,7 +61,7 @@
   when: backup_files.matched > 0
 
 - name: Find old monthly files
-  find:
+  ansible.builtin.find:
     paths: "{{ backup_dir }}"
     file_type: file
     patterns:
@@ -73,7 +73,7 @@
   become_user: "{{ backup_files_become_user | default(omit) }}"
 
 - name: Remove old monthly files
-  file:
+  ansible.builtin.file:
     path: "{{ item.path }}"
     state: absent
   loop: "{{ backup_files.files | default([]) }}"
@@ -82,7 +82,7 @@
   when: backup_files.matched > 0
 
 - name: Search for existing backup files
-  shell: ls -1 {{ backup_dir }}/*-{{ day_stamp }}*
+  ansible.builtin.shell: ls -1 {{ backup_dir }}/*-{{ day_stamp }}*
   register: day_files
   failed_when: day_files.rc > 2
   changed_when: false
@@ -91,7 +91,7 @@
   when: backup_one_per_day_limit | bool
 
 - name: Remove existing backups of the current day
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: absent
   loop: "{{ day_files.stdout_lines | default([]) }}"
