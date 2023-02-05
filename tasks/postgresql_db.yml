@@ -1,14 +1,15 @@
 ---
-- name: Set backup file name - {{ db }}
-  ansible.builtin.set_fact: backup_file_name="db-{{ db }}-{{ date_stamp }}-{{ backup_file_period }}.pg_dump"
+- name: Set backup file name - {{ db.database }}
+  ansible.builtin.set_fact: backup_file_name="db-{{ db.database }}-{{ date_stamp }}-{{ backup_file_period }}.pg_dump"
 
-- name: Create postgresql dump - {{ db }}
-  ansible.builtin.shell: "pg_dump {{ backup_postgresqldump_options }} {{ db }} > {{ backup_dir }}/{{ backup_file_name }}"
+- name: Create postgresql dump - {{ db.database }}
+  ansible.builtin.shell: "pg_dump {{ backup_postgresqldump_options }} {{ db.database }} > {{ backup_dir }}/{{ backup_file_name }}"
   become_user: postgres
   become: true
 
-- name: Create hash file for dump - {{ db }}
-  ansible.builtin.shell: "sha256sum {{ backup_file_name }} > {{ backup_file_name }}.sha256"
-  args:
-    chdir: "{{ backup_dir }}"
+- name: Include checksum file
+  ansible.builtin.include_tasks: checksum_file.yml
+  vars:
+    orig_file: '{{ backup_dir }}/{{ backup_file_name }}'
+    owner: postgres
   when: backup_create_hashfiles

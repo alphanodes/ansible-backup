@@ -3,33 +3,24 @@
   ansible.builtin.set_fact:
     excludes: "{{ instance.excludes | default([]) }}"
     unsafe_writes: "{{ instance.unsafe_writes | default(backup_files_unsafe_writes) }}"
-
-- name: Set warning options
-  ansible.builtin.set_fact:
-    warning_options: "{{ '--warning=no-file-removed --warning=no-file-changed --warning=no-file-ignored' if unsafe_writes else '' }}"
-
-- name: Set tar return code
-  ansible.builtin.set_fact:
-    tar_rc: "{{ 1 if warning_options == '' else 2 }}"
-
-- name: Set backup file name
-  ansible.builtin.set_fact:
     backup_file_name: "{{ instance.name }}-{{ date_stamp }}-{{ backup_file_period }}.tar.gz"
 
+# see https://docs.ansible.com/ansible/latest/collections/community/general/archive_module.html
+# TODO: archive only creates files with absolute path
 - name: Create backup of files/directories - {{ instance.name }}
-  ansible.builtin.command: "tar {{ warning_options }} --exclude={{ excludes | join(' --exclude=') }} -cplzf {{ backup_dir }}/{{ backup_file_name }} {{ instance.src | basename }}"
-  register: tar_cmd
-  failed_when: tar_cmd.rc >= tar_rc|int
+  community.general.archive:
+    path: '{{ instance.src }}'
+    dest: '{{ backup_dir }}/{{ backup_file_name }}'
+    format: gz
+    mode: 0644
+    exclude_path: '{{ excludes }}'
+    unsafe_writes: '{{ unsafe_writes | default(omit) }}'
   become: "{{ backup_files_become | default(omit) }}"
   become_user: '{{ backup_files_become_user | default(omit) }}'
-  args:
-    chdir: "{{ instance.src | dirname }}"
-    warn: false
 
-- name: Create hash file of backup sets - {{ instance.name }}
-  ansible.builtin.shell: "sha256sum {{ backup_file_name }} > {{ backup_dir }}/{{ backup_file_name }}.sha256"
-  become: "{{ backup_files_become | default(omit) }}"
-  become_user: '{{ backup_files_become_user | default(omit) }}'
-  args:
-    chdir: "{{ backup_dir }}"
+- name: Include checksum file
+  ansible.builtin.include_tasks: checksum_file.yml
+  vars:
+    orig_file: '{{ backup_dir }}/{{ backup_file_name }}'
+    owner: "{{ backup_files_become_user | default('root') }}"
   when: backup_create_hashfiles

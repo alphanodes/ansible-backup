@@ -1,14 +1,14 @@
 ---
 - name: Get postgresql databases
-  ansible.builtin.command: "psql --tuples-only -P format=unaligned -c \"SELECT datname FROM pg_database WHERE NOT datistemplate AND datname <> 'postgres'\""
+  community.postgresql.postgresql_query:
+    db: postgres
+    query: SELECT datname AS database FROM pg_database WHERE NOT datistemplate AND datname <> 'postgres'
   register: db_list
-  changed_when: db_list.rc != 0
   become_user: postgres
   become: true
 
 - name: Include PostgreSQL db tasks
   ansible.builtin.include_tasks: postgresql_db.yml
-  loop: "{{ db_list.stdout_lines | default([]) }}"
+  loop: "{{ db_list.query_result | default([]) }}"
   loop_control:
     loop_var: db
-  when: db_list.stdout_lines | length

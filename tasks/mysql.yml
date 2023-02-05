@@ -1,12 +1,16 @@
 ---
 - name: Get MySQL databases
-  ansible.builtin.command: mysql{{ ' --defaults-extra-file=' + backup_mysql_defaults_extra_file if backup_mysql_defaults_extra_file != '' else '' }} -Bse 'show databases'
+  community.mysql.mysql_info:
+    filter:
+      - databases
+    exclude_fields:
+      - db_size
+    config_file: '{{ backup_mysql_defaults_extra_file | default(omit, true) }}'
   register: db_list
-  changed_when: db_list.rc != 0
 
 - name: Include MySQL db tasks
   ansible.builtin.include_tasks: mysql_db.yml
-  loop: "{{ db_list.stdout_lines | default([]) }}"
+  loop: "{{ db_list.databases.keys() | list | default([]) }}"
   loop_control:
     loop_var: db
-  when: db_list.stdout_lines | length and db not in backup_mysql_db_excludes
+  when: db not in backup_mysql_db_excludes

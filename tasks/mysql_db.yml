@@ -21,10 +21,9 @@
   become_user: '{{ backup_mysql_become_user | default(omit) }}'
   when: backup_mysqldump_options != ''
 
-- name: Create hash file for dump - {{ db }}
-  ansible.builtin.shell: "sha256sum {{ backup_file_name }} > {{ backup_file_name }}.sha256"
-  become: "{{ backup_mysql_become | default(omit) }}"
-  become_user: '{{ backup_mysql_become_user | default(omit) }}'
-  args:
-    chdir: "{{ backup_dir }}"
+- name: Include checksum file
+  ansible.builtin.include_tasks: checksum_file.yml
+  vars:
+    orig_file: '{{ backup_dir }}/{{ backup_file_name }}'
+    owner: "{{ backup_mysql_become_user | default('root') }}"
   when: backup_create_hashfiles

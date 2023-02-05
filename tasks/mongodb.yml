@@ -6,8 +6,9 @@
 - name: Create mongodb dump
   ansible.builtin.shell: "mongodump {{ backup_mongodb_options }} > {{ backup_dir }}/{{ backup_file_name }}"
 
-- name: Create hash file for mongodb archive file
-  ansible.builtin.shell: "sha256sum {{ backup_file_name }} > {{ backup_file_name }}.sha256"
-  args:
-    chdir: "{{ backup_dir }}"
+- name: Include checksum file
+  ansible.builtin.include_tasks: checksum_file.yml
+  vars:
+    orig_file: '{{ backup_dir }}/{{ backup_file_name }}'
+    owner: root
   when: backup_create_hashfiles
