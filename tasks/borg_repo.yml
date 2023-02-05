@@ -31,6 +31,7 @@
     BORG_PASSPHRASE: '{{ borg_passphrase }}'
 
 - name: Run repository tasks - {{ borg_repo_name }}
+  when: borg_create.rc == 0
   block:
     - name: Show borg create stdout
       ansible.builtin.debug:
@@ -65,6 +66,7 @@
       when: backup_borg_with_check
 
     - name: With repository information (if activated) - {{ borg_repo_name }}
+      when: backup_borg_with_info
       block:
         - name: Get latest repository information
           ansible.builtin.command: >
@@ -79,7 +81,3 @@
         - name: Show borg info
           ansible.builtin.debug:
             var: info.stdout_lines
-
-      when: backup_borg_with_info
-
-  when: borg_create.rc == 0
