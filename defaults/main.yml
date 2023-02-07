@@ -52,13 +52,14 @@ backup_mysql_db_excludes:
   - sys
 
 backup_mysql_single_transaction: true
+backup_mysql_quick: true
 
 # Custom mysql options (always sql.gz is used)
-# backup_mysqldump_options: '--extended-insert=true --opt --single-transaction'
-backup_mysqldump_options: '-n public'
+# backup_mysqldump_options: '--extended-insert=true'
+backup_mysqldump_options: ''
 backup_mysql_defaults_extra_file: ''
 
-backup_postgresqldump_options: "--no-owner -Fc"
+backup_postgresqldump_options: "-n public --no-owner -Fc"
 backup_create_hashfiles: false
 backup_files_unsafe_writes: false
 

@@ -3,23 +3,16 @@
   ansible.builtin.set_fact:
     backup_file_name: "db-{{ db }}-{{ date_stamp }}-{{ backup_file_period }}{{ backup_db_dump_format }}"
 
-- name: Create MySQL dump (ansible) - {{ db }}
+- name: Create MySQL dump - {{ db }}
   community.mysql.mysql_db:
     name: '{{ db }}'
     target: "{{ backup_dir }}/{{ backup_file_name }}"
-    state: dump
+    dump_extra_args: '{{ backup_mysqldump_options | default(omit, true) }}'
     single_transaction: '{{ backup_mysql_single_transaction }}'
+    quick: '{{ backup_mysql_quick }}'
+    state: dump
   become: "{{ backup_mysql_become | default(omit) }}"
   become_user: '{{ backup_mysql_become_user | default(omit) }}'
-  when: backup_mysqldump_options == ''
-
-- name: Create MySQL dump (native) with custom options - {{ db }}
-  ansible.builtin.shell: |
-    set -o pipefail
-    mysqldump {{ backup_mysqldump_options }} {{ db }} | gzip > {{ backup_dir }}/{{ backup_file_name }}
-  become: "{{ backup_mysql_become | default(omit) }}"
-  become_user: '{{ backup_mysql_become_user | default(omit) }}'
-  when: backup_mysqldump_options != ''
 
 - name: Include checksum file
   ansible.builtin.include_tasks: checksum_file.yml
