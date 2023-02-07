@@ -55,7 +55,7 @@ backup_mysql_single_transaction: true
 
 # Custom mysql options (always sql.gz is used)
 # backup_mysqldump_options: '--extended-insert=true --opt --single-transaction'
-backup_mysqldump_options: ''
+backup_mysqldump_options: '-n public'
 backup_mysql_defaults_extra_file: ''
 
 backup_postgresqldump_options: "--no-owner -Fc"

@@ -4,7 +4,11 @@
     backup_file_name: "db-{{ db.database }}-{{ date_stamp }}-{{ backup_file_period }}.pg_dump"
 
 - name: Create postgresql dump - {{ db.database }}
-  ansible.builtin.shell: "pg_dump {{ backup_postgresqldump_options }} {{ db.database }} > {{ backup_dir }}/{{ backup_file_name }}"
+  community.postgresql.postgresql_db:
+    name: '{{ db.database }}'
+    target: '{{ backup_dir }}/{{ backup_file_name }}'
+    dump_extra_args: '{{ backup_postgresqldump_options }}'
+    state: dump
   become_user: postgres
   become: true
 
